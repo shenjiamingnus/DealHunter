@@ -34,3 +34,6 @@ replay_pid*
 *.iml
 /target/*
 /**/target/
+
+### VS Code ###
+.vscode/
