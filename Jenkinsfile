@@ -15,15 +15,9 @@ pipeline {
             steps {
                 // 使用Maven编译和打包Spring Boot应用
 //                 sh 'mvn clean package -DskipTests'
-//                 sh 'mvn package -DskipTests'
+                sh 'mvn package -DskipTests'
             }
         }
-
-            stage('Login') {
-                steps {
-                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                }
-            }
 
         stage('Build Docker Image') {
             steps {
@@ -36,6 +30,8 @@ pipeline {
 
         stage('Push Docker Image to Registry') {
             steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+
                 // 推送Docker镜像到Docker仓库
                 script {
                     docker.image("nandonus/dealhunter-backend").push()
