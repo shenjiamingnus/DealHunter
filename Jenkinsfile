@@ -1,16 +1,21 @@
 pipeline {
     agent any
 
-      tools {
-          maven 'maven'
-          jdk 'java'
-      }
+    tools {
+        maven 'maven'
+        jdk 'java'
+    }
+
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('docker')
+    }
 
     stages {
         stage('Build') {
             steps {
                 // 使用Maven编译和打包Spring Boot应用
-                sh 'mvn clean package -DskipTests'
+//                 sh 'mvn clean package -DskipTests'
+//                 sh 'mvn package -DskipTests'
             }
         }
 
@@ -18,16 +23,18 @@ pipeline {
             steps {
                 // 构建Docker镜像
                 script {
-                    docker.build("DealHunter:${env.BUILD_NUMBER}")
+                    docker.build("nandonus/dealhunter-backend")
                 }
             }
         }
 
         stage('Push Docker Image to Registry') {
             steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+
                 // 推送Docker镜像到Docker仓库
                 script {
-                    docker.image("DealHunter:${env.BUILD_NUMBER}").push()
+                    docker.image("nandonus/dealhunter-backend").push()
                 }
             }
         }
