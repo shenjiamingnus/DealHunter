@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     stages {
-
         stage('Build') {
             steps {
                 // 使用Maven编译和打包Spring Boot应用
