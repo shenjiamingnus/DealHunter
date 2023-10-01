@@ -51,13 +51,13 @@ public class SwaggerConfig {
         .securitySchemes(Arrays.asList(apiKey()))
         .groupName("Baobao Huayuan")
         .select()
-        .apis(RequestHandlerSelectors.basePackage("plan.day.backend.controller"))
+        .apis(RequestHandlerSelectors.basePackage("com.nus.dealhunter.controller"))
         .build();
   }
 
   private ApiInfo apiInfo() {
     return new ApiInfoBuilder()
-        .title("Plan Your Day")
+        .title("Deal Hunter")
         .contact(new Contact("makabaka", "wuxidixi", "dingdingche"))
         .version("1.0")
         .description("baobao bashi")
