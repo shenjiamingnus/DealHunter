@@ -19,6 +19,22 @@ pipeline {
             }
         }
 
+         stage('SonarQube analysis') {
+            steps {
+                withSonarQubeEnv('sonar') {
+                    sh "mvn clean verify sonar:sonar \
+                          -Dsonar.projectKey=dealhunter-backend \
+                          -Dsonar.host.url=http://159.89.205.188:9000 \
+                          -Dsonar.login=sqp_c401d95055ed6f33284d5f88d2e008372e65f9f7"
+                }
+            }
+         }
+         stage("Quality gate") {
+            steps {
+                waitForQualityGate abortPipeline: true
+            }
+         }
+
         stage('Build Docker Image') {
             steps {
                 // 构建Docker镜像
