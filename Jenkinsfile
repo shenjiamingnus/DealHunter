@@ -14,8 +14,8 @@ pipeline {
         stage('Build') {
             steps {
                 // 使用Maven编译和打包Spring Boot应用
-//                 sh 'mvn clean package -DskipTests'
-                sh 'mvn package -DskipTests'
+                sh 'mvn clean package -DskipTests'
+//                 sh 'mvn package -DskipTests'
             }
         }
 
