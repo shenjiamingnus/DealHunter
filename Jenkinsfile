@@ -22,7 +22,7 @@ pipeline {
          stage('SonarQube analysis') {
             steps {
                 withSonarQubeEnv('sonar') {
-                    sh "mvn package sonar:sonar"
+                    sh "mvn package org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar"
 //                     sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:4.8.0.2856:sonar \
 //                           -Dsonar.projectKey=dealhunter-backend \
 //                           -Dsonar.host.url=http://159.89.205.188:9000 \
