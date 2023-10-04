@@ -28,9 +28,7 @@ public class User {
   @Size(max = 100)
   private String password;
 
-  private Integer gender;
-
-  private String avatar;
+  private String email;
 
   @CreatedDate
   private Instant createDate;

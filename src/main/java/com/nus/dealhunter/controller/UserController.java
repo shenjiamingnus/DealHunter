@@ -1,8 +1,10 @@
 package com.nus.dealhunter.controller;
 
+import com.nus.dealhunter.enums.RoleName;
+import com.nus.dealhunter.model.Role;
+import com.nus.dealhunter.payload.request.AdminCreateRequest;
 import io.swagger.annotations.Api;
-import java.io.IOException;
-import java.util.Objects;
+import java.util.Set;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,9 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import com.nus.dealhunter.annotation.CurrentUser;
 import com.nus.dealhunter.model.CustomUserDetails;
 import com.nus.dealhunter.model.User;
@@ -53,8 +53,15 @@ public class UserController {
     SecurityContextHolder.getContext().setAuthentication(authentication);
     String generateToken = jwtTokenUtil.generateToken(authentication);
     User user = userService.getUser(loginRequest.getUsername());
-    return ResponseEntity.ok(new JwtAuthenticationResponse(generateToken, user.getUsername(),
-        user.getGender(), user.getAvatar()));
+    Set<Role> roles = user.getRoles();
+    int isAdmin = 0;
+    for(Role r : roles) {
+      if (r.getName() == RoleName.ADMIN) {
+        isAdmin = 1;
+        break;
+      }
+    }
+    return ResponseEntity.ok(new JwtAuthenticationResponse(generateToken, user.getUsername(), isAdmin));
   }
 
   @PostMapping("/signup")
@@ -71,11 +78,11 @@ public class UserController {
 
   @PutMapping("/modify")
   public ResponseEntity<?> modify(@Valid @RequestBody UserModifyRequest userModifyRequest, @CurrentUser CustomUserDetails userDetails) {
-    if (!Objects.equals(userService.getUser(userDetails.getId()).getUsername(), userModifyRequest.getUsername())){
-      if (userService.checkUserNameExists(userModifyRequest.getUsername())) {
-        return ResponseEntity.ok(new GeneralApiResponse(false, "Username already registered!"));
-      }
-    }
+//    if (!Objects.equals(userService.getUser(userDetails.getId()).getUsername(), userModifyRequest.getUsername())){
+//      if (userService.checkUserNameExists(userModifyRequest.getUsername())) {
+//        return ResponseEntity.ok(new GeneralApiResponse(false, "Username already registered!"));
+//      }
+//    }
 
     User modifyUser = userService.modifyUser(userModifyRequest, userDetails);
     if (modifyUser!= null) {
@@ -84,13 +91,24 @@ public class UserController {
     return ResponseEntity.ok(new GeneralApiResponse(false, "User Detail modify failed"));
   }
 
-  @PostMapping("/avatar")
-  public ResponseEntity<?> uploadAvatar(@RequestParam MultipartFile avatar, @CurrentUser CustomUserDetails userDetails) throws IOException {
-    User savedUser = userService.uploadAvatar(avatar, userDetails);
-    if (savedUser != null) {
-      return ResponseEntity.ok(new GeneralApiResponse(true, "Upload Successfully!", savedUser.getAvatar()));
+  @PostMapping("/create/admin")
+  public ResponseEntity<?> createAdmin(@Valid @RequestBody AdminCreateRequest adminCreateRequest, @CurrentUser CustomUserDetails userDetails) {
+    // check if the current user is admin
+    User user = userService.getUser(userDetails.getId());
+    Set<Role> roles = user.getRoles();
+    long count = roles.stream().filter(role -> role.getName() == RoleName.ADMIN).count();
+    if (count == 0) {
+      return ResponseEntity.ok(new GeneralApiResponse(false, "Current User is not Admin"));
     }
-    return ResponseEntity.ok(new GeneralApiResponse(false, "Upload Failed."));
+    // create new admin user
+    if (userService.checkUserNameExists(adminCreateRequest.getUsername())) {
+      return new ResponseEntity<>(new GeneralApiResponse(false, "Username already registered!"), HttpStatus.BAD_REQUEST);
+    }
+    User createdUser = userService.createAdminUser(adminCreateRequest);
+    if (createdUser != null) {
+      return ResponseEntity.ok(new GeneralApiResponse(true, "User registered!"));
+    }
+    return ResponseEntity.ok(new GeneralApiResponse(false, "User register failed."));
   }
 
 }

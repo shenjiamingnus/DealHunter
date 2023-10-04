@@ -11,14 +11,11 @@ public class JwtAuthenticationResponse {
 
   private String username;
 
-  private Integer gender;
+  private Integer isAdmin;
 
-  private String avatar;
-
-  public JwtAuthenticationResponse(String accessToken, String username, Integer gender, String avatar) {
+  public JwtAuthenticationResponse(String accessToken, String username, Integer isAdmin) {
     this.accessToken = accessToken;
     this.username = username;
-    this.gender = gender;
-    this.avatar = avatar;
+    this.isAdmin = isAdmin;
   }
 }

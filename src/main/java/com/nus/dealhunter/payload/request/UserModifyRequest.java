@@ -8,9 +8,8 @@ import lombok.Data;
 @Data
 public class UserModifyRequest {
 
-  @Size(max = 50)
-  private String username;
+  @Size(max = 100)
+  private String password;
 
-  private Integer gender;
 
 }

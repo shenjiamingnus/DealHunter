@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class SignupRequest {
+public class AdminCreateRequest {
 
   @NotBlank
   @Size(max = 50)
@@ -18,5 +18,6 @@ public class SignupRequest {
   @NotBlank
   @Size(max = 50)
   private String email;
+
 
 }
