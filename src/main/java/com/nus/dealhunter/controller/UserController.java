@@ -3,12 +3,14 @@ package com.nus.dealhunter.controller;
 import com.nus.dealhunter.enums.RoleName;
 import com.nus.dealhunter.model.Role;
 import com.nus.dealhunter.payload.request.AdminCreateRequest;
+import com.nus.dealhunter.payload.request.UserEmailModifyRequest;
 import io.swagger.annotations.Api;
 import java.util.Set;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,7 +25,7 @@ import com.nus.dealhunter.model.CustomUserDetails;
 import com.nus.dealhunter.model.User;
 import com.nus.dealhunter.payload.request.LoginRequest;
 import com.nus.dealhunter.payload.request.SignupRequest;
-import com.nus.dealhunter.payload.request.UserModifyRequest;
+import com.nus.dealhunter.payload.request.UserPasswordModifyRequest;
 import com.nus.dealhunter.payload.response.GeneralApiResponse;
 import com.nus.dealhunter.payload.response.JwtAuthenticationResponse;
 import com.nus.dealhunter.service.UserService;
@@ -76,31 +78,27 @@ public class UserController {
     return ResponseEntity.ok(new GeneralApiResponse(false, "User register failed."));
   }
 
-  @PutMapping("/modify")
-  public ResponseEntity<?> modify(@Valid @RequestBody UserModifyRequest userModifyRequest, @CurrentUser CustomUserDetails userDetails) {
-//    if (!Objects.equals(userService.getUser(userDetails.getId()).getUsername(), userModifyRequest.getUsername())){
-//      if (userService.checkUserNameExists(userModifyRequest.getUsername())) {
-//        return ResponseEntity.ok(new GeneralApiResponse(false, "Username already registered!"));
-//      }
-//    }
-
-    User modifyUser = userService.modifyUser(userModifyRequest, userDetails);
+  @PutMapping("/modify/password")
+  public ResponseEntity<?> modifyPassword(@Valid @RequestBody UserPasswordModifyRequest userModifyRequest, @CurrentUser CustomUserDetails userDetails) {
+    User modifyUser = userService.modifyUserPassword(userModifyRequest, userDetails);
     if (modifyUser!= null) {
       return ResponseEntity.ok(new GeneralApiResponse(true, "User Detail modified!"));
     }
     return ResponseEntity.ok(new GeneralApiResponse(false, "User Detail modify failed"));
   }
 
-  @PostMapping("/create/admin")
-  public ResponseEntity<?> createAdmin(@Valid @RequestBody AdminCreateRequest adminCreateRequest, @CurrentUser CustomUserDetails userDetails) {
-    // check if the current user is admin
-    User user = userService.getUser(userDetails.getId());
-    Set<Role> roles = user.getRoles();
-    long count = roles.stream().filter(role -> role.getName() == RoleName.ADMIN).count();
-    if (count == 0) {
-      return ResponseEntity.ok(new GeneralApiResponse(false, "Current User is not Admin"));
+  @PutMapping("/modify/email")
+  public ResponseEntity<?> modifyEmail(@Valid @RequestBody UserEmailModifyRequest userModifyRequest, @CurrentUser CustomUserDetails userDetails) {
+    User modifyUser = userService.modifyUserEmail(userModifyRequest, userDetails);
+    if (modifyUser!= null) {
+      return ResponseEntity.ok(new GeneralApiResponse(true, "User Detail modified!"));
     }
-    // create new admin user
+    return ResponseEntity.ok(new GeneralApiResponse(false, "User Detail modify failed"));
+  }
+
+  @PostMapping("/admin/create")
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public ResponseEntity<?> createAdmin(@Valid @RequestBody AdminCreateRequest adminCreateRequest, @CurrentUser CustomUserDetails userDetails) {
     if (userService.checkUserNameExists(adminCreateRequest.getUsername())) {
       return new ResponseEntity<>(new GeneralApiResponse(false, "Username already registered!"), HttpStatus.BAD_REQUEST);
     }

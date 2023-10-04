@@ -1,5 +1,6 @@
 package com.nus.dealhunter.config;
 
+import com.nus.dealhunter.enums.RoleName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

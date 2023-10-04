@@ -15,7 +15,8 @@ import com.nus.dealhunter.model.CustomUserDetails;
 import com.nus.dealhunter.model.Role;
 import com.nus.dealhunter.model.User;
 import com.nus.dealhunter.payload.request.SignupRequest;
-import com.nus.dealhunter.payload.request.UserModifyRequest;
+import com.nus.dealhunter.payload.request.UserPasswordModifyRequest;
+import com.nus.dealhunter.payload.request.UserEmailModifyRequest;
 import com.nus.dealhunter.repository.RoleRepository;
 import com.nus.dealhunter.repository.UserRepository;
 
@@ -71,10 +72,17 @@ public class UserService {
     return userRepository.save(user);
   }
 
-  public User modifyUser(UserModifyRequest userModifyRequest, CustomUserDetails userDetails) {
+  public User modifyUserPassword(UserPasswordModifyRequest userPasswordModifyRequest, CustomUserDetails userDetails) {
     User user = userRepository.findById(userDetails.getId()).orElseThrow(() ->
         new UsernameNotFoundException("User not found!"));
-    user.setPassword(passwordEncoder.encode(userModifyRequest.getPassword()));
+    user.setPassword(passwordEncoder.encode(userPasswordModifyRequest.getPassword()));
+    return userRepository.save(user);
+  }
+
+  public User modifyUserEmail(UserEmailModifyRequest userEmailModifyRequest, CustomUserDetails userDetails) {
+    User user = userRepository.findById(userDetails.getId()).orElseThrow(() ->
+        new UsernameNotFoundException("User not found!"));
+    user.setEmail(userEmailModifyRequest.getEmail());
     return userRepository.save(user);
   }
 
