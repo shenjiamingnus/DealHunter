@@ -39,8 +39,6 @@ public class CustomUserDetails implements UserDetails {
     List<GrantedAuthority> grantedAuthorities = user.getRoles().stream()
         .map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(
             Collectors.toList());
-    System.out.println(grantedAuthorities.get(0));
-    System.out.println(RoleName.ADMIN.name());
     return new CustomUserDetails(user.getId(), user.getUsername(), user.getPassword(), grantedAuthorities);
   }
 

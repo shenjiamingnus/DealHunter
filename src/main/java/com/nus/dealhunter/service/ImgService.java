@@ -17,7 +17,7 @@ public class ImgService {
 
   public static final String BUCKET = "dealhunter";
 
-  public static final String END_POINT = "http://68.183.176.202:9090";
+  public static final String END_POINT = "http://68.183.176.202:9000";
 
   public String uploadImage(MultipartFile file) {
     String objectName = UUID.randomUUID().toString();
@@ -38,9 +38,7 @@ public class ImgService {
       ex.printStackTrace();
       return null;
     }
-    String res = END_POINT + "/" + BUCKET + "/" + objectName + ".png";
-    System.out.println(res);
-    return res;
+    return END_POINT + "/" + BUCKET + "/" + objectName + ".png";
   }
 
 }
