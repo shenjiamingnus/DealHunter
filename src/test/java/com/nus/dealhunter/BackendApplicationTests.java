@@ -9,8 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 
 @SpringBootTest
-@EnableAutoConfiguration(exclude = { SecurityAutoConfiguration.class, SecurityConfig.class,
-    SwaggerConfig.class})
+@EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class})
 class BackendApplicationTests {
 
   @Test
