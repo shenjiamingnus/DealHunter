@@ -39,7 +39,10 @@ public class Product {
     @CreatedDate
     private Instant createDate;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "products_brands",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "brand_id"))
     private Set<Brand> brands = new HashSet<>();
 
 

@@ -1,6 +1,7 @@
 package com.nus.dealhunter.model;
 
 import java.time.Instant;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -26,6 +27,9 @@ public class Brand {
 
     @CreatedDate
     private Instant createDate;
+
+    @ManyToMany(mappedBy = "brands")
+    private Set<Product> products;
 
     public Brand(String brandname) {
         this.brandname = brandname;
