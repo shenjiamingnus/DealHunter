@@ -17,15 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 public class ProductController {
 
-    @Autowired
-    AuthenticationManager authenticationManager;
 
     @Autowired
     UserService productService;
 
     @Autowired
     JwtTokenUtil jwtTokenUtil;
-
 
 
 
