@@ -55,6 +55,18 @@ pipeline {
                 }
             }
         }
+        stage('Deploy'){
+            steps {
+                script {
+                    // 切换到指定路径
+                    def targetDirectory = '/root/doterraform'
+                    dir(targetDirectory) {
+                        // 在目标路径执行cat操作
+                        sh 'terraform apply -auto-approve -var "do_token=${DO_PAT}" -var "ssh_private_key=/root/digit" -var "docker_host=128.199.67.95" -var "docker_cert_path=/root/.docker/machine/machines/docker-nginx2"'
+                    }
+                }
+            }
+        }
     }
 
     post {
@@ -67,4 +79,6 @@ pipeline {
             echo 'Build or deployment failed!'
         }
     }
+
+
 }
