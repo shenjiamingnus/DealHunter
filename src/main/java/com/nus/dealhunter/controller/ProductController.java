@@ -1,12 +1,13 @@
 package com.nus.dealhunter.controller;
 
+import com.nus.dealhunter.model.Product;
+import com.nus.dealhunter.service.ProductService;
 import com.nus.dealhunter.util.JwtTokenUtil;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.nus.dealhunter.service.ProductService;
-import com.nus.dealhunter.model.Product;
+
 import java.util.List;
 
 
@@ -34,6 +35,16 @@ public class ProductController {
         return productService.getProductById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/productname")
+    public ResponseEntity<List<Product>> getProductByProductname(@RequestParam String productname){
+        List<Product> products = productService.getProductByProductname(productname);
+        if(!products.isEmpty()){
+            return ResponseEntity.ok(products);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping

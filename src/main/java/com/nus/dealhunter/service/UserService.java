@@ -1,24 +1,25 @@
 package com.nus.dealhunter.service;
 
-import com.nus.dealhunter.payload.request.AdminCreateRequest;
-import java.time.Instant;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import com.nus.dealhunter.enums.RoleName;
 import com.nus.dealhunter.exception.CommonException;
 import com.nus.dealhunter.model.CustomUserDetails;
 import com.nus.dealhunter.model.Role;
 import com.nus.dealhunter.model.User;
+import com.nus.dealhunter.payload.request.AdminCreateRequest;
 import com.nus.dealhunter.payload.request.SignupRequest;
-import com.nus.dealhunter.payload.request.UserPasswordModifyRequest;
 import com.nus.dealhunter.payload.request.UserEmailModifyRequest;
+import com.nus.dealhunter.payload.request.UserPasswordModifyRequest;
 import com.nus.dealhunter.repository.RoleRepository;
 import com.nus.dealhunter.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class UserService {

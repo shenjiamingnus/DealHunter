@@ -1,7 +1,8 @@
 package com.nus.dealhunter.payload.request;
 
-import javax.validation.constraints.NotBlank;
 import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
 
 @Data
 public class LoginRequest {

@@ -1,10 +1,13 @@
 package com.nus.dealhunter.service;
 
-import com.nus.dealhunter.model.Product;
-import com.nus.dealhunter.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.nus.dealhunter.exception.ProductServiceException;
+import com.nus.dealhunter.model.Product;
+import com.nus.dealhunter.model.Brand;
+import com.nus.dealhunter.repository.ProductRepository;
+import com.nus.dealhunter.repository.BrandRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +35,10 @@ public class ProductService {
             throw new ProductServiceException("Failed to retrieve product with ID: " + id, e);
         }
 
+    }
+
+    public List<Product> getProductByProductname(String productname){
+        return productRepository.findByProductname(productname);
     }
 
     public Product saveProduct(Product product) {
