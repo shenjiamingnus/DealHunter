@@ -62,7 +62,7 @@ pipeline {
                     dir(targetDirectory) {
                         // 在目标路径执行cat操作
 //                         sh 'export DO_PAT=dop_v1_930e3c5909d8d1cabef471b7bffe7f00b6235cf0ca6ae402ad3d93147684373a'
-                        sh 'terraform apply -auto-approve -var "do_token=${DO_PAT}" -var "ssh_private_key=/root/digit" -var "docker_host=128.199.67.95" -var "docker_cert_path=/root/.docker/machine/machines/docker-nginx2"'
+                        sh 'terraform apply -auto-approve -var "do_token=dop_v1_5f0a78ffbeb92bf5c60a53635b5989a57b75c7809cd41ee7ce2859ef9556be16" -var "ssh_private_key=/root/digit" -var "docker_host=128.199.67.95" -var "docker_cert_path=/root/.docker/machine/machines/docker-nginx2"'
                     }
                 }
             }
