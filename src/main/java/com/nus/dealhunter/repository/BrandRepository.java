@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface BrandRepository extends JpaRepository<Brand, Long> {
 
-    static List<Brand> findByBrandname(String brandname);
+    List<Brand> findByBrandname(String brandname);
 
     Boolean existsByBrandname(String brandname);
 
