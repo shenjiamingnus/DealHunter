@@ -2,7 +2,11 @@ package com.nus.dealhunter.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
-
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -37,6 +41,7 @@ public class Product {
 
     private Double lowestPrice;
 
+
     @CreatedDate
     private Instant createDate;
 
@@ -46,11 +51,34 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "brand_id"))
     private Set<Brand> brands = new HashSet<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PriceHistory> priceHistoryList = new ArrayList<>();
 
     public Product(String productname, String brandname) {
         this.productname = productname;
         this.brandname = brandname;
     }
+
+
+
+    public void setCurrentPrice(double currentprice) {
+        this.currentPrice = currentprice;
+    }
+
+    public double getCurrentPrice() {
+        return currentPrice;
+    }
+
+
+
+    public void setLowestPrice(double lowestPrice) {
+        this.lowestPrice = lowestPrice;
+    }
+
+    public double getLowestPrice() {
+        return lowestPrice;
+    }
+
 
     public Product() {}
 }
