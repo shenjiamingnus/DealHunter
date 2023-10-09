@@ -1,5 +1,7 @@
 package com.nus.dealhunter.controller;
 
+import com.nus.dealhunter.model.Product;
+import com.nus.dealhunter.service.ProductService;
 import com.nus.dealhunter.exception.ProductServiceException;
 import com.nus.dealhunter.model.PriceHistory;
 import com.nus.dealhunter.util.JwtTokenUtil;
@@ -8,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.nus.dealhunter.service.ProductService;
-import com.nus.dealhunter.model.Product;
+
 import java.util.List;
+import java.util.Optional;
 
 
 @Api("Product/")
@@ -36,6 +38,27 @@ public class ProductController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/productname")
+    public ResponseEntity<List<Product>> getProductByProductname(@RequestParam String productname){
+        List<Product> products = productService.getProductByProductname(productname);
+        if(!products.isEmpty()){
+            return ResponseEntity.ok(products);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/brandname")
+    public ResponseEntity<List<Product>> getProductByBrandname(@RequestParam String brandname){
+        List<Product> products = productService.getProductByBrandname(brandname);
+        if(!products.isEmpty()){
+            return ResponseEntity.ok(products);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product){

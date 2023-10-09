@@ -11,6 +11,18 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.springframework.http.HttpStatus;
@@ -28,7 +40,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -48,6 +62,7 @@ class ProductControllerTest {
     JwtTokenUtil jwtTokenUtil;
     @InjectMocks
     ProductController productController;
+
 
     @BeforeEach
     void setUp() {
@@ -99,7 +114,7 @@ class ProductControllerTest {
         Mockito.verify(productService).deleteProduct(productId);
     }
 
-    @Test
+
     public void testGetProductPriceHistory() {
         String productName = "TestProduct";
         String brandName = "TestBrand";
@@ -155,6 +170,7 @@ class ProductControllerTest {
 //        Assert.assertFalse(result.getBody().getPriceHistoryList().isEmpty());
 //        Assert.assertEquals(newPrice, result.getBody().getPriceHistoryList().get(0).getPrice(), 0.01);
 //    }
+
 
 
 }

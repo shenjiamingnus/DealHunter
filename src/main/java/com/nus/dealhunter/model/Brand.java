@@ -1,12 +1,13 @@
 package com.nus.dealhunter.model;
 
-import java.time.Instant;
-import java.util.Set;
+import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
+import java.time.Instant;
+import java.util.Set;
 
 @Data
 @Entity
@@ -28,7 +29,7 @@ public class Brand {
     @CreatedDate
     private Instant createDate;
 
-    @ManyToMany(mappedBy = "brands")
+    @OneToMany(mappedBy = "brands")
     private Set<Product> products;
 
     public Brand(String brandname) {

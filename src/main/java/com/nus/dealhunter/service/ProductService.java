@@ -6,6 +6,11 @@ import com.nus.dealhunter.repository.PriceHistoryRepository;
 import com.nus.dealhunter.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.nus.dealhunter.exception.ProductServiceException;
+import com.nus.dealhunter.model.Product;
+import com.nus.dealhunter.model.Brand;
+import com.nus.dealhunter.repository.ProductRepository;
+import com.nus.dealhunter.repository.BrandRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -40,6 +45,22 @@ public class ProductService {
             throw new ProductServiceException("Failed to retrieve product with ID: " + id, e);
         }
 
+    }
+
+    public List<Product> getProductByProductname(String productname){
+        try {
+            return productRepository.findByProductname(productname);
+        }catch (Exception e){
+            throw new ProductServiceException("Failed to retrieve product with Productname: " + productname, e);
+        }
+    }
+
+    public List<Product> getProductByBrandname(String brandname){
+        try {
+            return productRepository.findByBrandname(brandname);
+        }catch (Exception e){
+            throw new ProductServiceException("Failed to retrieve product with Brandname: " + brandname, e);
+        }
     }
 
     public Product saveProduct(Product product) {

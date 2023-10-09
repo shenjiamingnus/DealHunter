@@ -1,7 +1,8 @@
 package com.nus.dealhunter.payload.request;
 
-import javax.validation.constraints.Size;
 import lombok.Data;
+
+import javax.validation.constraints.Size;
 
 @Data
 public class UserPasswordModifyRequest {
