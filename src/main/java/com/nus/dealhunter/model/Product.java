@@ -24,10 +24,6 @@ public class Product {
     @Size(max = 50)
     private String productname;
 
-    @NotBlank
-    @Size(max = 50)
-    private String brandname;
-
     private String storeAddress;
 
     private String discription;
@@ -39,16 +35,21 @@ public class Product {
     @CreatedDate
     private Instant createDate;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "products_brands",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "brand_id"))
-    private Set<Brand> brands = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    private  Brand brand;
 
 
-    public Product(String productname, String brandname) {
+    public Product(String productname) {
         this.productname = productname;
-        this.brandname = brandname;
+
+    }
+
+
+    public Product(Long id, String productname, double currentPrice) {
+        this.id = id;
+        this.productname = productname;
+        this.currentPrice = currentPrice;
     }
 
     public Product() {}

@@ -21,9 +21,6 @@ public class ProductController {
     private ProductService productService;
 
 
-    @Autowired
-    JwtTokenUtil jwtTokenUtil;
-
     @GetMapping
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
@@ -36,8 +33,17 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /**create product*/
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product){
+        Product savedProduct = productService.saveProduct(product);
+        return ResponseEntity.ok(savedProduct);
+
+    }
+
+    /**update product*/
+    @PutMapping
+    public ResponseEntity<Product> updateProduct(@RequestBody Product product){
         Product savedProduct = productService.saveProduct(product);
         return ResponseEntity.ok(savedProduct);
 

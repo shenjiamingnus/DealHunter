@@ -1,6 +1,8 @@
 package com.nus.dealhunter.service;
 
+import com.nus.dealhunter.model.Brand;
 import com.nus.dealhunter.model.Product;
+import com.nus.dealhunter.repository.BrandRepository;
 import com.nus.dealhunter.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.nus.dealhunter.exception.ProductServiceException;
@@ -12,6 +14,9 @@ import java.util.Optional;
 public class ProductService {
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private BrandRepository brandRepository;
 
     public Boolean checkProductNameExists(String productname) {
         return productRepository.existsByProductname(productname);
@@ -34,8 +39,17 @@ public class ProductService {
 
     }
 
+    /**save and update*/
     public Product saveProduct(Product product) {
         try {
+
+            // Check if the brand associated with the product exists
+            if (product.getBrand().getId() != null && brandRepository.findById(product.getBrand().getId()).isEmpty()){
+                // If the brand doesn't have an ID, it means it's a new brand, so need save it
+                Brand savedBrand = brandRepository.save(product.getBrand());
+                // Set the saved brand to the product
+                product.setBrand(savedBrand);
+            }
             return productRepository.save(product);
         }catch (Exception e){
             throw new ProductServiceException("Failed to save product", e);

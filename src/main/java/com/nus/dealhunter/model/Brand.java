@@ -28,7 +28,7 @@ public class Brand {
     @CreatedDate
     private Instant createDate;
 
-    @ManyToMany(mappedBy = "brands")
+    @OneToMany(mappedBy = "brand")
     private Set<Product> products;
 
     public Brand(String brandname) {
@@ -37,6 +37,13 @@ public class Brand {
     }
 
     public Brand() {}
+
+    public Brand(Long id,String brandname){
+        this.id = id;
+        this.brandname = brandname;
+
+
+    }
 
 
 

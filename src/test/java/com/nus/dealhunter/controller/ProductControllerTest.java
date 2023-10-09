@@ -34,10 +34,10 @@ class ProductControllerTest {
 
     @Test
     void testGetAllProducts() {
-        when(productService.getAllProducts()).thenReturn(List.of(new Product("productname", "brandname")));
+        when(productService.getAllProducts()).thenReturn(List.of(new Product("productname")));
 
         List<Product> result = productController.getAllProducts();
-        Assertions.assertEquals(List.of(new Product("productname", "brandname")), result);
+        Assertions.assertEquals(List.of(new Product("productname")), result);
     }
 
     @Test
@@ -58,9 +58,9 @@ class ProductControllerTest {
 
     @Test
     void testCreateProduct() {
-        when(productService.saveProduct(any())).thenReturn(new Product("productname", "brandname"));
+        when(productService.saveProduct(any())).thenReturn(new Product("productname"));
 
-        ResponseEntity<Product> result = productController.createProduct(new Product("productname", "brandname"));
+        ResponseEntity<Product> result = productController.createProduct(new Product("productname"));
         Assertions.assertNotEquals(null, result);
     }
 
