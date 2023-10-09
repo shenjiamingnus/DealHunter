@@ -102,4 +102,17 @@ public class UserController {
     return ResponseEntity.ok(new GeneralApiResponse(false, "User register failed."));
   }
 
+  @PostMapping("/admin/test")
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public ResponseEntity<?> testAdmin(@Valid @RequestBody AdminCreateRequest adminCreateRequest, @CurrentUser CustomUserDetails userDetails) {
+    if (userService.checkUserNameExists(adminCreateRequest.getUsername())) {
+      return new ResponseEntity<>(new GeneralApiResponse(false, "Username already registered!"), HttpStatus.BAD_REQUEST);
+    }
+    User createdUser = userService.createAdminUser(adminCreateRequest);
+    if (createdUser != null) {
+      return ResponseEntity.ok(new GeneralApiResponse(true, "User registered!"));
+    }
+    return ResponseEntity.ok(new GeneralApiResponse(false, "User register failed."));
+  }
+
 }
