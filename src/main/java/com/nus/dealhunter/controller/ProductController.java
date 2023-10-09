@@ -1,8 +1,11 @@
 package com.nus.dealhunter.controller;
 
+import com.nus.dealhunter.exception.ProductServiceException;
+import com.nus.dealhunter.model.PriceHistory;
 import com.nus.dealhunter.util.JwtTokenUtil;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.nus.dealhunter.service.ProductService;
@@ -16,10 +19,11 @@ import java.util.List;
 
 public class ProductController {
 
-
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
 
     @GetMapping
     public List<Product> getAllProducts() {
@@ -33,17 +37,8 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**create product*/
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product){
-        Product savedProduct = productService.saveProduct(product);
-        return ResponseEntity.ok(savedProduct);
-
-    }
-
-    /**update product*/
-    @PutMapping
-    public ResponseEntity<Product> updateProduct(@RequestBody Product product){
         Product savedProduct = productService.saveProduct(product);
         return ResponseEntity.ok(savedProduct);
 
@@ -55,7 +50,36 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
+    //获取产品的价格历史记录
+    @GetMapping("/getPriceHistory")
+    public ResponseEntity<List<PriceHistory>> getPriceHistory(@RequestParam String productname,
+                                                              @RequestParam String brandname) {
+        try {
+            List<PriceHistory> priceHistoryList = productService.getProductPriceHistory(productname, brandname);
+            return ResponseEntity.ok(priceHistoryList);
+        } catch (ProductServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PostMapping("/submitNewPrice")
+    public ResponseEntity<Product> submitNewPrice(
+            @RequestParam String productname,
+            @RequestParam String brandname,
+            @RequestParam double newPrice) {
+        try {
+            Product updatedProduct = productService.submitNewPrice(productname, brandname, newPrice);
+            return ResponseEntity.ok(updatedProduct);
+        } catch (ProductServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 
 
 
 }
+
+
+
+
+

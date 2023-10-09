@@ -1,7 +1,9 @@
 package com.nus.dealhunter.model;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -32,6 +34,7 @@ public class Product {
 
     private Double lowestPrice;
 
+
     @CreatedDate
     private Instant createDate;
 
@@ -39,6 +42,8 @@ public class Product {
     @JoinColumn(name = "brand_id")
     private  Brand brand;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PriceHistory> priceHistoryList = new ArrayList<>();
 
     public Product(String productname) {
         this.productname = productname;
@@ -51,6 +56,27 @@ public class Product {
         this.productname = productname;
         this.currentPrice = currentPrice;
     }
+
+
+
+    public void setCurrentPrice(double currentprice) {
+        this.currentPrice = currentprice;
+    }
+
+    public double getCurrentPrice() {
+        return currentPrice;
+    }
+
+
+
+    public void setLowestPrice(double lowestPrice) {
+        this.lowestPrice = lowestPrice;
+    }
+
+    public double getLowestPrice() {
+        return lowestPrice;
+    }
+
 
     public Product() {}
 }
