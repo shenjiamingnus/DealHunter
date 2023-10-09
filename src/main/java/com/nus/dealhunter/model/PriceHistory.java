@@ -1,6 +1,7 @@
 package com.nus.dealhunter.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-@Table(name = "priceHistory")
+@Table(name = "price_history")
 public class PriceHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +21,7 @@ public class PriceHistory {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @JsonIgnore
     private Product product;
 
 

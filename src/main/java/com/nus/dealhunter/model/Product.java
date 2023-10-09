@@ -2,12 +2,12 @@ package com.nus.dealhunter.model;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -26,12 +26,18 @@ public class Product {
     @Size(max = 50)
     private String productname;
 
+    @NotBlank
+    @Size(max = 50)
+    private String brandname;
+
+
     private String storeAddress;
 
     private String discription;
 
     private Double currentPrice;
 
+    @JsonInclude
     private Double lowestPrice;
 
 
@@ -50,13 +56,16 @@ public class Product {
 
     }
 
+    public Product(String productname, String brandname) {
+        this.productname = productname;
+        this.brandname = brandname;
+    }
 
     public Product(Long id, String productname, double currentPrice) {
         this.id = id;
         this.productname = productname;
         this.currentPrice = currentPrice;
     }
-
 
 
     public void setCurrentPrice(double currentprice) {

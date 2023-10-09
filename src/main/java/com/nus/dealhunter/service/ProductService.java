@@ -42,8 +42,18 @@ public class ProductService {
 
     }
 
+    public List<Product> getProductByProductname(String productname) {
+        try {
+            return productRepository.findByProductname(productname);
+        }catch (Exception e){
+            throw new ProductServiceException("Failed to retrieve product with productname: " + productname, e);
+        }
+    }
+
+    //when create a product, make LowestPrice = CurrentPrice
     public Product saveProduct(Product product) {
         try {
+            product.setLowestPrice(product.getCurrentPrice());
             return productRepository.save(product);
         }catch (Exception e){
             throw new ProductServiceException("Failed to save product", e);
@@ -115,8 +125,6 @@ public class ProductService {
             throw new ProductServiceException("Failed to submit new price for product with productname " + productname + " and brandname " + brandname, e);
         }
     }
-
-
 
 
 

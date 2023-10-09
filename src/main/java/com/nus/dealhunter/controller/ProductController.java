@@ -30,6 +30,16 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
+    @GetMapping("/productname")
+    public ResponseEntity<List<Product>> getProductByProductname(@RequestParam String productname){
+        List<Product> products = productService.getProductByProductname(productname);
+        if(!products.isEmpty()){
+            return ResponseEntity.ok(products);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id){
         return productService.getProductById(id)
@@ -49,6 +59,8 @@ public class ProductController {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
+
+
 
     //获取产品的价格历史记录
     @GetMapping("/getPriceHistory")

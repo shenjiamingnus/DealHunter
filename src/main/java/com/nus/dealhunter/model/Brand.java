@@ -1,10 +1,12 @@
 package com.nus.dealhunter.model;
 
 import java.time.Instant;
-import java.util.Set;
+import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -29,7 +31,8 @@ public class Brand {
     private Instant createDate;
 
     @OneToMany(mappedBy = "brand")
-    private Set<Product> products;
+    @JsonIgnore
+    private List<Product> products;
 
     public Brand(String brandname) {
         this.brandname = brandname;
