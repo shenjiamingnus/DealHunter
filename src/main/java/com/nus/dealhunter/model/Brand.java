@@ -29,7 +29,7 @@ public class Brand {
     @CreatedDate
     private Instant createDate;
 
-    @ManyToMany(mappedBy = "brands")
+    @OneToMany(mappedBy = "brands")
     private Set<Product> products;
 
     public Brand(String brandname) {

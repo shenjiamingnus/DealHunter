@@ -11,7 +11,6 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-<<<<<<< HEAD
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -24,7 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-=======
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.springframework.http.HttpStatus;
@@ -38,7 +36,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 
 import java.time.LocalDate;
->>>>>>> liang_01
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,8 +62,7 @@ class ProductControllerTest {
     JwtTokenUtil jwtTokenUtil;
     @InjectMocks
     ProductController productController;
-    @Autowired
-    private MockMvc mockMvc;
+
 
     @BeforeEach
     void setUp() {
@@ -118,14 +114,7 @@ class ProductControllerTest {
         Mockito.verify(productService).deleteProduct(productId);
     }
 
-    @Test
-<<<<<<< HEAD
-    void testGetProductByProductName() throws Exception{
 
-
-
-    }
-=======
     public void testGetProductPriceHistory() {
         String productName = "TestProduct";
         String brandName = "TestBrand";
@@ -183,7 +172,7 @@ class ProductControllerTest {
 //    }
 
 
->>>>>>> liang_01
+
 }
 
 

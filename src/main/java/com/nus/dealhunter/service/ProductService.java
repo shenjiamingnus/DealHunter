@@ -48,7 +48,19 @@ public class ProductService {
     }
 
     public List<Product> getProductByProductname(String productname){
-        return productRepository.findByProductname(productname);
+        try {
+            return productRepository.findByProductname(productname);
+        }catch (Exception e){
+            throw new ProductServiceException("Failed to retrieve product with Productname: " + productname, e);
+        }
+    }
+
+    public List<Product> getProductByBrandname(String brandname){
+        try {
+            return productRepository.findByBrandname(brandname);
+        }catch (Exception e){
+            throw new ProductServiceException("Failed to retrieve product with Brandname: " + brandname, e);
+        }
     }
 
     public Product saveProduct(Product product) {

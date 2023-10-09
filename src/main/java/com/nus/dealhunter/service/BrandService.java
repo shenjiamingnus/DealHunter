@@ -44,9 +44,14 @@ public class BrandService {
 
     }
 
-    public List<Brand> getBrandByBrandname(String brandname){
-        return brandRepository.findByBrandname(brandname);
+    public List<Brand> getBrandByBrandname(String brandname) {
+        try {
+            return brandRepository.findByBrandname(brandname);
+        }catch (Exception e){
+            throw new BrandServiceException("Failed to find brand", e);
+        }
     }
+
 
 
 }
