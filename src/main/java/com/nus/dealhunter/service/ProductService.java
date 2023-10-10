@@ -6,11 +6,6 @@ import com.nus.dealhunter.repository.PriceHistoryRepository;
 import com.nus.dealhunter.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.nus.dealhunter.exception.ProductServiceException;
-import com.nus.dealhunter.model.Product;
-import com.nus.dealhunter.model.Brand;
-import com.nus.dealhunter.repository.ProductRepository;
-import com.nus.dealhunter.repository.BrandRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -47,24 +42,18 @@ public class ProductService {
 
     }
 
-    public List<Product> getProductByProductname(String productname){
+    public List<Product> getProductByProductname(String productname) {
         try {
             return productRepository.findByProductname(productname);
         }catch (Exception e){
-            throw new ProductServiceException("Failed to retrieve product with Productname: " + productname, e);
+            throw new ProductServiceException("Failed to retrieve product with productname: " + productname, e);
         }
     }
 
-    public List<Product> getProductByBrandname(String brandname){
-        try {
-            return productRepository.findByBrandname(brandname);
-        }catch (Exception e){
-            throw new ProductServiceException("Failed to retrieve product with Brandname: " + brandname, e);
-        }
-    }
-
+    //when create a product, make LowestPrice = CurrentPrice
     public Product saveProduct(Product product) {
         try {
+            product.setLowestPrice(product.getCurrentPrice());
             return productRepository.save(product);
         }catch (Exception e){
             throw new ProductServiceException("Failed to save product", e);
@@ -136,8 +125,6 @@ public class ProductService {
             throw new ProductServiceException("Failed to submit new price for product with productname " + productname + " and brandname " + brandname, e);
         }
     }
-
-
 
 
 
