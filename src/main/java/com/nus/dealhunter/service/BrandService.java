@@ -6,7 +6,10 @@ import com.nus.dealhunter.repository.BrandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
+import java.util.Optional;
+
 
 @Service
 public class BrandService {
@@ -51,6 +54,11 @@ public class BrandService {
             throw new BrandServiceException("Failed to find brand", e);
         }
     }
+
+    public Optional<Brand> findById(Long id){
+        return brandRepository.findById(id);
+    }
+
 
 
 
