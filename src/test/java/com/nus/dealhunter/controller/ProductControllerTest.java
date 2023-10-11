@@ -33,6 +33,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
 import java.time.LocalDate;
@@ -112,6 +113,61 @@ class ProductControllerTest {
         // Assert
         Assert.assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
         Mockito.verify(productService).deleteProduct(productId);
+    }
+
+    @Test
+    public void testModifyProductname() throws Exception{
+
+
+
+    }
+
+    @Test
+    public void testModifyStoreAddress() throws Exception {
+        Long productId = 1L;
+        String newStoreAddress = "New Store Address";
+
+        Product product = new Product();
+        product.setStoreAddress("Initial Store Address");
+
+        Mockito.when(productService.modifyStoreAddress(productId, newStoreAddress)).thenReturn(product);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/products/" + productId + "/storeAddress")
+                        .param("newStoreAddress", newStoreAddress)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testModifyDiscription() throws Exception {
+        Long productId = 1L;
+        String newDiscription = "New Description";
+
+        Product product = new Product();
+        product.setDiscription("Initial Description");
+
+        Mockito.when(productService.modifyDiscription(productId, newDiscription)).thenReturn(product);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/products/" + productId + "/discription")
+                        .param("newDiscription", newDiscription)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testModifyImageUrl() throws Exception {
+        Long productId = 1L;
+        String newImageUrl = "New Image URL";
+
+        Product product = new Product();
+        product.setImageUrl("Initial Image URL");
+
+        Mockito.when(productService.modifyImageUrl(productId, newImageUrl)).thenReturn(product);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/products/" + productId + "/ImageUrl")
+                        .param("newImageUrl", newImageUrl)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
 
