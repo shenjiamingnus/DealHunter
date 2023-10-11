@@ -64,6 +64,7 @@ public class ProductController {
         }
     }
 
+    /** Product Creat, update, delete*/
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product){
         Product savedProduct = productService.saveProduct(product);
@@ -71,50 +72,18 @@ public class ProductController {
 
     }
 
+    @PutMapping
+    public ResponseEntity<Product> updateProduct(@RequestBody Product product){
+        Product savedProduct = productService.updateProduct(product);
+        return ResponseEntity.ok(savedProduct);
+
+    }
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id){
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{id}/productname")
-    public ResponseEntity<Product> modifyProductname(@PathVariable Long id, @RequestParam String newProductname) {
-        Product modifyProduct = productService.modifyProductname( id, newProductname);
-        if (modifyProduct != null){
-            return ResponseEntity.ok(modifyProduct);
-        }else{
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PutMapping("/{id}/storeAddress")
-    public ResponseEntity<Product> modifyBrandname(@PathVariable Long id, @RequestParam String newStoreAddress) {
-        Product modifyProduct = productService.modifyStoreAddress( id, newStoreAddress);
-        if (modifyProduct != null){
-            return ResponseEntity.ok(modifyProduct);
-        }else{
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PutMapping("/{id}/discription")
-    public ResponseEntity<Product> modifyDiscription(@PathVariable Long id, @RequestParam String newDiscription) {
-        Product modifyProduct = productService.modifyStoreAddress( id, newDiscription);
-        if (modifyProduct != null){
-            return ResponseEntity.ok(modifyProduct);
-        }else{
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PutMapping("/{id}/ImageUrl")
-    public ResponseEntity<Product> modifyImageUrl(@PathVariable Long id, @RequestParam String newImageUrl) {
-        Product modifyProduct = productService.modifyImageUrl( id, newImageUrl);
-        if (modifyProduct != null){
-            return ResponseEntity.ok(modifyProduct);
-        }else{
-            return ResponseEntity.notFound().build();
-        }
     }
 
 

@@ -68,61 +68,15 @@ public class ProductService {
         }
     }
 
-    public Product modifyProductname(Long id, String newProductname) {
+    public Product updateProduct(Product product) {
         try {
-            Optional<Product> existingProduct = productRepository.findById(id);
-            if (existingProduct.isPresent()) {
-                Product product = existingProduct.get();
-                product.setProductname(newProductname);
-                return productRepository.save(product);
-            }
-            return null;
-        } catch (Exception e) {
-            throw new ProductServiceException("Failed to modify productname", e);
+            return productRepository.save(product);
+        }catch (Exception e){
+            throw new ProductServiceException("Failed to save product", e);
         }
     }
 
-    public Product modifyStoreAddress(Long id, String newStoreAddress) {
-        try {
-            Optional<Product> existingProduct = productRepository.findById(id);
-            if (existingProduct.isPresent()) {
-                Product product = existingProduct.get();
-                product.setStoreAddress(newStoreAddress);
-                return productRepository.save(product);
-            }
-            return null;
-        } catch (Exception e) {
-            throw new ProductServiceException("Failed to modify storeAddress", e);
-        }
-    }
 
-    public Product modifyDiscription(Long id, String newDiscription) {
-        try {
-            Optional<Product> existingProduct = productRepository.findById(id);
-            if (existingProduct.isPresent()) {
-                Product product = existingProduct.get();
-                product.setDiscription(newDiscription);
-                return productRepository.save(product);
-            }
-            return null;
-        } catch (Exception e) {
-            throw new ProductServiceException("Failed to modify discription", e);
-        }
-    }
-
-    public Product modifyImageUrl(Long id, String newImageUrl) {
-        try {
-            Optional<Product> existingProduct = productRepository.findById(id);
-            if (existingProduct.isPresent()) {
-                Product product = existingProduct.get();
-                product.setImageUrl(newImageUrl);
-                return productRepository.save(product);
-            }
-            return null;
-        } catch (Exception e) {
-            throw new ProductServiceException("Failed to modify image", e);
-        }
-    }
 
     public void deleteProduct(Long id) {
         try {

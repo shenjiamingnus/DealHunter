@@ -1,51 +1,28 @@
 package com.nus.dealhunter.controller;
 
-
 import com.nus.dealhunter.model.PriceHistory;
 import com.nus.dealhunter.model.Product;
-import com.nus.dealhunter.repository.ProductRepository;
 import com.nus.dealhunter.service.ProductService;
-import com.nus.dealhunter.service.PriceHistoryService;
 import com.nus.dealhunter.util.JwtTokenUtil;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.*;
-import org.springframework.http.HttpStatus;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
-@AutoConfigureMockMvc(addFilters = false)
-class ProductControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    ProductService productService;
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private ProductRepository priceHistoryRepository;
-
+class ProductControllerTest{
     @Mock
-    JwtTokenUtil jwtTokenUtil;
+    ProductService productService;
+
     @InjectMocks
     ProductController productController;
 
@@ -89,6 +66,14 @@ class ProductControllerTest {
     }
 
     @Test
+    void testUpdateProduct() {
+        when(productService.updateProduct(any())).thenReturn(new Product(Long.valueOf(1), "productnameUpdate", 0d));
+
+        ResponseEntity<Product> result = productController.updateProduct(new Product(Long.valueOf(1), "productname", 0d));
+        Assertions.assertEquals("productnameUpdate", result.getBody().getProductname());
+    }
+
+    @Test
     void testDeleteProduct() {
         ResponseEntity<Void> result = productController.deleteProduct(Long.valueOf(1));
         Assertions.assertEquals(null, result.getBody());
@@ -112,12 +97,5 @@ class ProductControllerTest {
         Assertions.assertEquals(products, result.getBody());
     }
 }
-
-
-
-
-
-
-
 
 //Generated with love by TestMe :) Please report issues and submit feature requests at: https://weirddev.com/forum#!/testme
