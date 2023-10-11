@@ -1,14 +1,15 @@
 package com.nus.dealhunter.service;
 
-import javax.transaction.Transactional;
+import com.nus.dealhunter.model.CustomUserDetails;
+import com.nus.dealhunter.model.User;
+import com.nus.dealhunter.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.nus.dealhunter.model.CustomUserDetails;
-import com.nus.dealhunter.model.User;
-import com.nus.dealhunter.repository.UserRepository;
+
+import javax.transaction.Transactional;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

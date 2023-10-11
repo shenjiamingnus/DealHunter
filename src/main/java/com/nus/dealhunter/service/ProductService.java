@@ -50,6 +50,14 @@ public class ProductService {
         }
     }
 
+    public List<Product> getProductByBrandname(String brandname){
+        try {
+            return productRepository.findByBrandname(brandname);
+        }catch (Exception e){
+            throw new ProductServiceException("Failed to retrieve product with Brandname: " + brandname, e);
+        }
+    }
+
     //when create a product, make LowestPrice = CurrentPrice
     public Product saveProduct(Product product) {
         try {
@@ -58,7 +66,62 @@ public class ProductService {
         }catch (Exception e){
             throw new ProductServiceException("Failed to save product", e);
         }
+    }
 
+    public Product modifyProductname(Long id, String newProductname) {
+        try {
+            Optional<Product> existingProduct = productRepository.findById(id);
+            if (existingProduct.isPresent()) {
+                Product product = existingProduct.get();
+                product.setProductname(newProductname);
+                return productRepository.save(product);
+            }
+            return null;
+        } catch (Exception e) {
+            throw new ProductServiceException("Failed to modify productname", e);
+        }
+    }
+
+    public Product modifyStoreAddress(Long id, String newStoreAddress) {
+        try {
+            Optional<Product> existingProduct = productRepository.findById(id);
+            if (existingProduct.isPresent()) {
+                Product product = existingProduct.get();
+                product.setStoreAddress(newStoreAddress);
+                return productRepository.save(product);
+            }
+            return null;
+        } catch (Exception e) {
+            throw new ProductServiceException("Failed to modify storeAddress", e);
+        }
+    }
+
+    public Product modifyDiscription(Long id, String newDiscription) {
+        try {
+            Optional<Product> existingProduct = productRepository.findById(id);
+            if (existingProduct.isPresent()) {
+                Product product = existingProduct.get();
+                product.setDiscription(newDiscription);
+                return productRepository.save(product);
+            }
+            return null;
+        } catch (Exception e) {
+            throw new ProductServiceException("Failed to modify discription", e);
+        }
+    }
+
+    public Product modifyImageUrl(Long id, String newImageUrl) {
+        try {
+            Optional<Product> existingProduct = productRepository.findById(id);
+            if (existingProduct.isPresent()) {
+                Product product = existingProduct.get();
+                product.setImageUrl(newImageUrl);
+                return productRepository.save(product);
+            }
+            return null;
+        } catch (Exception e) {
+            throw new ProductServiceException("Failed to modify image", e);
+        }
     }
 
     public void deleteProduct(Long id) {
