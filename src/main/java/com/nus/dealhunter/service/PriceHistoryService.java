@@ -24,9 +24,28 @@ public class PriceHistoryService {
     private ProductRepository productRepository;
 
 
+
     public void savePriceHistory(PriceHistory priceHistory) {
         priceHistoryRepository.save(priceHistory);
     }
+
+    public PriceHistory createPriceHistory(PriceHistory priceHistory) {
+        return priceHistoryRepository.save(priceHistory);
+    }
+
+    public void deletePriceHistory(Long priceHistoryId) {
+        priceHistoryRepository.deleteById(priceHistoryId);
+    }
+
+    public PriceHistory updatePriceHistory(PriceHistory priceHistory) {
+        return priceHistoryRepository.save(priceHistory);
+    }
+
+    public List<PriceHistory> getPriceHistoryByProductId(Long productId) {
+        return priceHistoryRepository.findByProductId(productId);
+    }
+
+
 
     public List<PriceHistory> getPriceHistory(long id) throws PriceHistoryServiceException{
         try {
@@ -35,6 +54,10 @@ public class PriceHistoryService {
             throw new PriceHistoryServiceException("Failed to retrieve product with ID: " + id, e);
         }
     }
+
+
+
+
 
     public List<PriceHistory> viewHistoricalPriceTrends(Long Id, LocalDate startDate, LocalDate endDate) {
         try {

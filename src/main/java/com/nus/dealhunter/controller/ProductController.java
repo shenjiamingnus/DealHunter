@@ -117,15 +117,12 @@ public class ProductController {
         }
     }
 
-
-
     //获取产品的价格历史记录
     @GetMapping("/getPriceHistory")
     public ResponseEntity<List<PriceHistory>> getPriceHistory(@RequestParam String productname,
                                                               @RequestParam String brandname) {
         List<PriceHistory> priceHistoryList = productService.getProductPriceHistory(productname, brandname);
         return ResponseEntity.ok(priceHistoryList);
-
     }
 
     @PostMapping("/submitNewPrice")

@@ -149,6 +149,25 @@ public class ProductService {
         }
     }
 
+    // 向商品的价格历史记录列表添加一条记录
+    public PriceHistory addPriceHistoryToProduct(Long productId, PriceHistory priceHistory) throws ProductServiceException {
+        try {
+            Optional<Product> optionalProduct = productRepository.findById(productId);
+            if (optionalProduct.isPresent()) {
+                Product product = optionalProduct.get();
+                priceHistory.setProduct(product);                       // 关联到商品
+                PriceHistory savedPriceHistory = priceHistoryRepository.save(priceHistory);
+                product.getPriceHistoryList().add(savedPriceHistory);   // 添加到商品的价格历史记录列表
+                productRepository.save(product);                        // 更新商品对象，以保存关联的价格历史记录
+                return savedPriceHistory;
+            } else {
+                throw new ProductServiceException("Product with ID " + productId + " not found");
+            }
+        } catch (Exception e) {
+            throw new ProductServiceException("Failed to add price history to product with ID " + productId, e);
+        }
+    }
+
 
     public Product submitNewPrice(String productname, String brandname, double newPrice) {
         try {
