@@ -35,8 +35,8 @@ public class PriceHistoryController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<PriceHistory> createPriceHistory(@RequestBody PriceHistory priceHistory) {
-        PriceHistory savedPriceHistory = priceHistoryService.createPriceHistory(priceHistory);
+    public ResponseEntity<PriceHistory> savePriceHistory(@RequestBody PriceHistory priceHistory) {
+        PriceHistory savedPriceHistory = priceHistoryService.savePriceHistory(priceHistory);
         return new ResponseEntity<>(savedPriceHistory, HttpStatus.CREATED);
     }
 

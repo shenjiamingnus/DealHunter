@@ -55,7 +55,6 @@ public class Product {
 
     public Product(String productname) {
         this.productname = productname;
-
     }
 
     public Product(String productname, String brandname) {
@@ -88,36 +87,6 @@ public class Product {
         return productname;
     }
 
-    public void setProductname(String productname) {
-        this.productname = productname;
-    }
-
-    public String getStoreAddress() {
-        return storeAddress;
-    }
-
-    public void setStoreAddress(String storeAddress) {
-        this.storeAddress = storeAddress;
-    }
-
-    public String getDiscription() {
-        return discription;
-    }
-
-    public void setDiscription(String discription) {
-        this.discription = discription;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-
-
     public void setCurrentPrice(double currentprice) {
         this.currentPrice = currentprice;
     }
@@ -125,8 +94,6 @@ public class Product {
     public double getCurrentPrice() {
         return currentPrice;
     }
-
-
 
     public void setLowestPrice(double lowestPrice) {
         this.lowestPrice = lowestPrice;

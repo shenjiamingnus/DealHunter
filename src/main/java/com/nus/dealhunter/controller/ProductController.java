@@ -77,65 +77,26 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/productname")
-    public ResponseEntity<Product> modifyProductname(@PathVariable Long id, @RequestParam String newProductname) {
-        Product modifyProduct = productService.modifyProductname( id, newProductname);
-        if (modifyProduct != null){
-            return ResponseEntity.ok(modifyProduct);
-        }else{
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PutMapping("/{id}/storeAddress")
-    public ResponseEntity<Product> modifyBrandname(@PathVariable Long id, @RequestParam String newStoreAddress) {
-        Product modifyProduct = productService.modifyStoreAddress( id, newStoreAddress);
-        if (modifyProduct != null){
-            return ResponseEntity.ok(modifyProduct);
-        }else{
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PutMapping("/{id}/discription")
-    public ResponseEntity<Product> modifyDiscription(@PathVariable Long id, @RequestParam String newDiscription) {
-        Product modifyProduct = productService.modifyStoreAddress( id, newDiscription);
-        if (modifyProduct != null){
-            return ResponseEntity.ok(modifyProduct);
-        }else{
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PutMapping("/{id}/ImageUrl")
-    public ResponseEntity<Product> modifyImageUrl(@PathVariable Long id, @RequestParam String newImageUrl) {
-        Product modifyProduct = productService.modifyImageUrl( id, newImageUrl);
-        if (modifyProduct != null){
-            return ResponseEntity.ok(modifyProduct);
-        }else{
-            return ResponseEntity.notFound().build();
-        }
+    @PutMapping
+    public ResponseEntity<Product> updateProduct(@RequestBody Product product){
+        Product savedProduct = productService.updateProduct(product);
+        return ResponseEntity.ok(savedProduct);
     }
 
     //获取产品的价格历史记录
-    @GetMapping("/getPriceHistory")
-    public ResponseEntity<List<PriceHistory>> getPriceHistory(@RequestParam String productname,
-                                                              @RequestParam String brandname) {
-        List<PriceHistory> priceHistoryList = productService.getProductPriceHistory(productname, brandname);
+    @GetMapping("/getProductPriceHistory")
+    public ResponseEntity<List<PriceHistory>> getProductPriceHistory(@PathVariable Long id) {
+        List<PriceHistory> priceHistoryList = productService.getProductPriceHistory(id);
         return ResponseEntity.ok(priceHistoryList);
     }
 
-    @PostMapping("/submitNewPrice")
+    @PostMapping("/{productId}/submit-price")
     public ResponseEntity<Product> submitNewPrice(
-            @RequestParam String productname,
-            @RequestParam String brandname,
-            @RequestParam double newPrice) {
-        try {
-            Product updatedProduct = productService.submitNewPrice(productname, brandname, newPrice);
-            return ResponseEntity.ok(updatedProduct);
-        } catch (ProductServiceException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+            @PathVariable Long productId,
+            @RequestParam double newPrice
+    ) {
+        Product updatedProduct = productService.submitNewPrice(productId, newPrice);
+        return ResponseEntity.ok(updatedProduct);
     }
 
 

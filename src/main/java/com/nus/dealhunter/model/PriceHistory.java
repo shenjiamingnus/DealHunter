@@ -14,7 +14,9 @@ public class PriceHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Double price;
+
     private LocalDate date;
 
 
@@ -23,12 +25,18 @@ public class PriceHistory {
     @JsonIgnore
     private Product product;
 
-
-
     public PriceHistory(double price, LocalDate date, Product product) {
         this.price = price;
         this.date = date;
         this.product = product;
+    }
+
+    public LocalDate getPriceHistoryDate() {
+        return date;
+    }
+
+    public double getPriceFromPriceHistory() {
+        return price;
     }
 
     public PriceHistory() {

@@ -1,69 +1,30 @@
 package com.nus.dealhunter.controller;
 
-
 import com.nus.dealhunter.model.PriceHistory;
 import com.nus.dealhunter.model.Product;
-import com.nus.dealhunter.repository.ProductRepository;
 import com.nus.dealhunter.service.ProductService;
-import com.nus.dealhunter.service.PriceHistoryService;
 import com.nus.dealhunter.util.JwtTokenUtil;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import org.junit.runner.RunWith;
-import org.mockito.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
-@AutoConfigureMockMvc(addFilters = false)
-class ProductControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    ProductService productService;
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private ProductRepository priceHistoryRepository;
-
+class ProductControllerTest{
     @Mock
-    JwtTokenUtil jwtTokenUtil;
+    ProductService productService;
+
     @InjectMocks
     ProductController productController;
-
 
     @BeforeEach
     void setUp() {
@@ -72,170 +33,67 @@ class ProductControllerTest {
 
     @Test
     void testGetAllProducts() {
-        when(productService.getAllProducts()).thenReturn(List.of(new Product("productname")));
+        when(productService.getAllProducts()).thenReturn(List.of(new Product(Long.valueOf(1), "productname", 0d)));
 
         List<Product> result = productController.getAllProducts();
-        Assertions.assertEquals(List.of(new Product("productname")), result);
+        Assertions.assertEquals(List.of(new Product(Long.valueOf(1), "productname", 0d)), result);
+    }
+
+    @Test
+    void testGetProductByProductname() {
+        when(productService.getProductByProductname(anyString())).thenReturn(List.of(new Product(Long.valueOf(1), "productname", 0d)));
+
+        ResponseEntity<List<Product>> result = productController.getProductByProductname("productname");
+        Assertions.assertEquals(List.of(new Product(Long.valueOf(1), "productname", 0d)), result.getBody());
     }
 
     @Test
     void testGetProductById() {
+        when(productService.getProductById(anyLong())).thenReturn(Optional.of(new Product(Long.valueOf(1), "productname", 0d)));
 
-        // Arrange
-        Long productId = 1L;
-        Product product = new Product();
-        Mockito.when(productService.getProductById(productId)).thenReturn(Optional.of(product));
-
-        // Act
-        ResponseEntity<Product> result = productController.getProductById(productId);
-
-        // Assert
-        Assert.assertEquals(HttpStatus.OK, result.getStatusCode());
-        Assert.assertEquals(product, result.getBody());
+        ResponseEntity<Product> result = productController.getProductById(Long.valueOf(1));
+        Product product = Optional.of(new Product(Long.valueOf(1), "productname", 0d)).get();
+        Assertions.assertEquals(product, result.getBody());
     }
 
     @Test
     void testCreateProduct() {
-        when(productService.saveProduct(any())).thenReturn(new Product("productname"));
+        when(productService.saveProduct(any())).thenReturn(new Product(Long.valueOf(1), "productname", 0d));
 
-        ResponseEntity<Product> result = productController.createProduct(new Product("productname"));
-        Assertions.assertNotEquals(null, result);
+        ResponseEntity<Product> result = productController.createProduct(new Product(Long.valueOf(1), "productname", 0d));
+        Product product = Optional.of(new Product(Long.valueOf(1), "productname", 0d)).get();
+        Assertions.assertEquals(product, result.getBody());
+    }
+
+    @Test
+    void testUpdateProduct() {
+        when(productService.updateProduct(any())).thenReturn(new Product(Long.valueOf(1), "productnameUpdate", 0d));
+
+        ResponseEntity<Product> result = productController.updateProduct(new Product(Long.valueOf(1), "productname", 0d));
+        Assertions.assertEquals("productnameUpdate", result.getBody().getProductname());
     }
 
     @Test
     void testDeleteProduct() {
-        // Arrange
-        Long productId = 1L;
-
-        // Act
-        ResponseEntity<Void> result = productController.deleteProduct(productId);
-
-        // Assert
-        Assert.assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
-        Mockito.verify(productService).deleteProduct(productId);
+        ResponseEntity<Void> result = productController.deleteProduct(Long.valueOf(1));
+        Assertions.assertEquals(null, result.getBody());
     }
 
     @Test
-    public void testModifyProductname() throws Exception{
+    void testgGetProductPriceHistory() {
+        when(productService.getProductPriceHistory(anyLong())).thenReturn(List.of(new PriceHistory(0d, LocalDate.of(2023, Month.OCTOBER, 11), new Product(Long.valueOf(1), "productname", 0d))));
 
-
-
+        ResponseEntity<List<PriceHistory>> result = productController.getProductPriceHistory(Long.valueOf(1));
+        List<PriceHistory> priceHistory = List.of(new  PriceHistory(0d, LocalDate.of(2023, Month.OCTOBER, 11), new Product(Long.valueOf(1), "productname", 0d)));
+        Assertions.assertEquals(priceHistory, result.getBody());
     }
 
     @Test
-    public void testModifyStoreAddress() throws Exception {
-        Long productId = 1L;
-        String newStoreAddress = "New Store Address";
+    void testSubmitNewPrice() {
+        when(productService.submitNewPrice(anyLong(), anyDouble())).thenReturn(new Product(Long.valueOf(1), "productname", 1d));
 
-        Product product = new Product();
-        product.setStoreAddress("Initial Store Address");
-
-        Mockito.when(productService.modifyStoreAddress(productId, newStoreAddress)).thenReturn(product);
-
-        mockMvc.perform(MockMvcRequestBuilders.put("/products/" + productId + "/storeAddress")
-                        .param("newStoreAddress", newStoreAddress)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        ResponseEntity<Product> result = productController.submitNewPrice(Long.valueOf(1), 0d);
+        Product products = new Product(Long.valueOf(1), "productname", 1d);
+        Assertions.assertEquals(products, result.getBody());
     }
-
-    @Test
-    public void testModifyDiscription() throws Exception {
-        Long productId = 1L;
-        String newDiscription = "New Description";
-
-        Product product = new Product();
-        product.setDiscription("Initial Description");
-
-        Mockito.when(productService.modifyDiscription(productId, newDiscription)).thenReturn(product);
-
-        mockMvc.perform(MockMvcRequestBuilders.put("/products/" + productId + "/discription")
-                        .param("newDiscription", newDiscription)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    public void testModifyImageUrl() throws Exception {
-        Long productId = 1L;
-        String newImageUrl = "New Image URL";
-
-        Product product = new Product();
-        product.setImageUrl("Initial Image URL");
-
-        Mockito.when(productService.modifyImageUrl(productId, newImageUrl)).thenReturn(product);
-
-        mockMvc.perform(MockMvcRequestBuilders.put("/products/" + productId + "/ImageUrl")
-                        .param("newImageUrl", newImageUrl)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-
-    public void testGetProductPriceHistory() {
-        String productName = "TestProduct";
-        String brandName = "TestBrand";
-        Product product = new Product(productName, brandName);
-        List<PriceHistory> priceHistoryList = new ArrayList<>();
-
-        when(productRepository.findByProductnameAndBrandname(productName, brandName)).thenReturn(Optional.of(product));
-
-        List<PriceHistory> result = productService.getProductPriceHistory(productName, brandName);
-
-        // 验证
-        Assert.assertEquals(priceHistoryList, result);
-    }
-
-//    @Test
-//    public void testSubmitNewPrice() {
-//        // 准备测试数据
-//        String productName = "TestProduct";
-//        String brandName = "TestBrand";
-//        double currentPrice = 99.99;
-//        double newPrice = 89.99; // 新的价格
-//
-//        Product product = new Product(productName, brandName);
-//        product.setCurrentPrice(currentPrice);
-//        product.setLowestPrice(0); // 设置历史最低价为0
-//
-//        PriceHistory newPriceHistory = new PriceHistory(newPrice, LocalDate.now(), product);
-//
-//        // 模拟 productRepository 的行为
-//        when(productRepository.findByProductnameAndBrandname(productName, brandName)).thenReturn(Optional.of(product));
-//        when(productRepository.save(any(Product.class))).thenReturn(product);
-//
-//        // 模拟 priceHistoryRepository 的行为
-//        when(priceHistoryRepository.save(any(PriceHistory.class))).thenReturn(newPriceHistory);
-//
-//        // 模拟 productService 的行为
-//        when(productService.submitNewPrice(productName, brandName, newPrice)).thenReturn(product);
-//
-//        // 调用方法
-//        ResponseEntity<Product> result = productController.submitNewPrice(productName, brandName, newPrice);
-//
-//        // 验证响应状态码
-//        Assert.assertEquals(HttpStatus.OK, result.getStatusCode());
-//
-//        // 验证currentPrice是否正确更新
-//        Assert.assertEquals(newPrice, result.getBody().getCurrentPrice(), 0.01);
-//
-//        // 验证lowestPrice是否正确更新
-//        Assert.assertEquals(newPrice, result.getBody().getLowestPrice(), 0.01);
-//
-//        // 验证priceHistory是否被正确添加
-//        Assert.assertNotNull(result.getBody().getPriceHistoryList());
-//        Assert.assertFalse(result.getBody().getPriceHistoryList().isEmpty());
-//        Assert.assertEquals(newPrice, result.getBody().getPriceHistoryList().get(0).getPrice(), 0.01);
-//    }
-
-
-
 }
-
-
-
-
-
-
-
-
-//Generated with love by TestMe :) Please report issues and submit feature requests at: https://weirddev.com/forum#!/testme

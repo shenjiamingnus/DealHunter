@@ -15,15 +15,16 @@ import java.util.Optional;
 
 @Service
 public class ProductService {
+
     @Autowired
     private ProductRepository productRepository;
+
     @Autowired
     private PriceHistoryRepository priceHistoryRepository;
 
     public Boolean checkProductNameExists(String productname) {
         return productRepository.existsByProductname(productname);
     }
-
 
     public List<Product> getAllProducts(){
         try {
@@ -62,65 +63,21 @@ public class ProductService {
     public Product saveProduct(Product product) {
         try {
             product.setLowestPrice(product.getCurrentPrice());
+            PriceHistory newPriceHistory = new PriceHistory(product.getCurrentPrice(), LocalDate.now(), product);
+            if(product.getCurrentPrice() != 0){
+                product.getPriceHistoryList().add(newPriceHistory);
+            }
             return productRepository.save(product);
         }catch (Exception e){
             throw new ProductServiceException("Failed to save product", e);
         }
     }
 
-    public Product modifyProductname(Long id, String newProductname) {
+    public Product updateProduct(Product product) {
         try {
-            Optional<Product> existingProduct = productRepository.findById(id);
-            if (existingProduct.isPresent()) {
-                Product product = existingProduct.get();
-                product.setProductname(newProductname);
-                return productRepository.save(product);
-            }
-            return null;
-        } catch (Exception e) {
-            throw new ProductServiceException("Failed to modify productname", e);
-        }
-    }
-
-    public Product modifyStoreAddress(Long id, String newStoreAddress) {
-        try {
-            Optional<Product> existingProduct = productRepository.findById(id);
-            if (existingProduct.isPresent()) {
-                Product product = existingProduct.get();
-                product.setStoreAddress(newStoreAddress);
-                return productRepository.save(product);
-            }
-            return null;
-        } catch (Exception e) {
-            throw new ProductServiceException("Failed to modify storeAddress", e);
-        }
-    }
-
-    public Product modifyDiscription(Long id, String newDiscription) {
-        try {
-            Optional<Product> existingProduct = productRepository.findById(id);
-            if (existingProduct.isPresent()) {
-                Product product = existingProduct.get();
-                product.setDiscription(newDiscription);
-                return productRepository.save(product);
-            }
-            return null;
-        } catch (Exception e) {
-            throw new ProductServiceException("Failed to modify discription", e);
-        }
-    }
-
-    public Product modifyImageUrl(Long id, String newImageUrl) {
-        try {
-            Optional<Product> existingProduct = productRepository.findById(id);
-            if (existingProduct.isPresent()) {
-                Product product = existingProduct.get();
-                product.setImageUrl(newImageUrl);
-                return productRepository.save(product);
-            }
-            return null;
-        } catch (Exception e) {
-            throw new ProductServiceException("Failed to modify image", e);
+            return productRepository.save(product);
+        }catch (Exception e){
+            throw new ProductServiceException("Failed to save product", e);
         }
     }
 
@@ -133,19 +90,19 @@ public class ProductService {
 
     }
 
-    public List<PriceHistory> getProductPriceHistory(String productname, String brandname) {
+    public List<PriceHistory> getProductPriceHistory(Long productId) {
         try {
-            Optional<Product> optionalProduct = productRepository.findByProductnameAndBrandname(productname, brandname);
+            Optional<Product> optionalProduct = productRepository.findById(productId);
             if (optionalProduct.isPresent()) {
                 Product product = optionalProduct.get();
                 // 获取产品的历史价格列表
                 List<PriceHistory> priceHistoryList = product.getPriceHistoryList();
                 return priceHistoryList;
             } else {
-                throw new ProductServiceException("Product with productname " + productname + " and brandname " + brandname + " not found");
+                throw new ProductServiceException("Product with ID " + productId + " not found");
             }
         } catch (Exception e) {
-            throw new ProductServiceException("Failed to submit new price for product with productname " + productname + " and brandname " + brandname, e);
+            throw new ProductServiceException("Failed to retrieve price history for product with ID " + productId, e);
         }
     }
 
@@ -168,11 +125,30 @@ public class ProductService {
         }
     }
 
-
-    public Product submitNewPrice(String productname, String brandname, double newPrice) {
+    public void deletePriceHistoryFromProduct(Long productId, Long priceHistoryId) {
         try {
-            // 根据 productname 和 brandname 查找产品
-            Optional<Product> optionalProduct = productRepository.findByProductnameAndBrandname(productname, brandname);
+            Product product = productRepository.findById(productId).orElse(null);
+            if (product != null) {
+                // 获取产品的价格历史记录列表
+                List<PriceHistory> priceHistoryList = product.getPriceHistoryList();
+
+                // 遍历价格历史记录列表，查找要删除的记录
+                for (PriceHistory priceHistory : priceHistoryList) {
+                    if (priceHistory.getId().equals(priceHistoryId)) {
+                        priceHistoryList.remove(priceHistory);
+                        productRepository.save(product);
+                        return;
+                    }
+                }
+            }
+        }catch (Exception e){
+                throw new ProductServiceException("Failed to delete price history to product with ID " + productId, e);
+        }
+    }
+
+    public Product submitNewPrice(Long productId, double newPrice) {
+        try {
+            Optional<Product> optionalProduct = productRepository.findById(productId);
             if (optionalProduct.isPresent()) {
                 Product product = optionalProduct.get();
 
@@ -201,10 +177,10 @@ public class ProductService {
                 // 保存更新后的产品对象到数据库
                 return productRepository.save(product);
             } else {
-                throw new ProductServiceException("Product with productname " + productname + " and brandname " + brandname + " not found");
+                throw new ProductServiceException("Product with productId " + productId + " not found");
             }
         } catch (Exception e) {
-            throw new ProductServiceException("Failed to submit new price for product with productname " + productname + " and brandname " + brandname, e);
+            throw new ProductServiceException("Failed to submit new price for product with productId " + productId, e);
         }
     }
 

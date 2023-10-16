@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @Service
 public class PriceHistoryService {
+
     @Autowired
     private PriceHistoryRepository priceHistoryRepository;
 
@@ -24,40 +25,37 @@ public class PriceHistoryService {
     private ProductRepository productRepository;
 
 
-
-    public void savePriceHistory(PriceHistory priceHistory) {
-        priceHistoryRepository.save(priceHistory);
-    }
-
-    public PriceHistory createPriceHistory(PriceHistory priceHistory) {
-        return priceHistoryRepository.save(priceHistory);
-    }
-
-    public void deletePriceHistory(Long priceHistoryId) {
-        priceHistoryRepository.deleteById(priceHistoryId);
-    }
-
-    public PriceHistory updatePriceHistory(PriceHistory priceHistory) {
-        return priceHistoryRepository.save(priceHistory);
-    }
-
-    public List<PriceHistory> getPriceHistoryByProductId(Long productId) {
-        return priceHistoryRepository.findByProductId(productId);
-    }
-
-
-
-    public List<PriceHistory> getPriceHistory(long id) throws PriceHistoryServiceException{
+    public PriceHistory savePriceHistory(PriceHistory priceHistory) {
         try {
-            return priceHistoryRepository.findByProductId(id);
-        }catch (Exception e){
-            throw new PriceHistoryServiceException("Failed to retrieve product with ID: " + id, e);
+            return priceHistoryRepository.save(priceHistory);
+        }catch(Exception e){
+            throw new PriceHistoryServiceException("Failed to create priceHistory ", e);
         }
     }
 
+    public PriceHistory updatePriceHistory(PriceHistory priceHistory){
+        try {
+            return priceHistoryRepository.save(priceHistory);
+        } catch (Exception e) {
+            throw new PriceHistoryServiceException("Failed to update priceHistory ", e);
+        }
+    }
 
+    public void deletePriceHistory(Long priceHistoryId) {
+        try {
+            priceHistoryRepository.deleteById(priceHistoryId);
+        }catch(Exception e){
+            throw new PriceHistoryServiceException("Failed to retrieve all priceHistory ", e);
+        }
+    }
 
-
+    public List<PriceHistory> getPriceHistoryByProductId(Long productId) {
+        try {
+            return priceHistoryRepository.findByProductId(productId);
+        }catch(Exception e){
+            throw new PriceHistoryServiceException("Failed to get priceHistory by productId ", e);
+        }
+    }
 
     public List<PriceHistory> viewHistoricalPriceTrends(Long Id, LocalDate startDate, LocalDate endDate) {
         try {
@@ -74,8 +72,6 @@ public class PriceHistoryService {
             throw new ProductServiceException("Failed to view historical price trends for product with ID " + Id, e);
         }
     }
-
-
 
 
 }

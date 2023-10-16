@@ -36,17 +36,16 @@ public class Brand {
 
     public Brand(String brandname) {
         this.brandname = brandname;
-
     }
-
-    public Brand() {}
 
     public Brand(Long id,String brandname){
         this.id = id;
         this.brandname = brandname;
-
-
     }
+
+    public Brand() {}
+
+
 
 
 
