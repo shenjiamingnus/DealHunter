@@ -62,10 +62,11 @@ public class Product {
         this.brandname = brandname;
     }
 
-    public Product(Long id, String productname, double currentPrice) {
+    public Product(Long id, String productname, double currentPrice ) {
         this.id = id;
         this.productname = productname;
         this.currentPrice = currentPrice;
+        this .lowestPrice = currentPrice;
     }
 
     public Product(String productname, String brandname, String storeAddress) {

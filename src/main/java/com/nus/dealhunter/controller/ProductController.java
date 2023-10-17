@@ -64,9 +64,17 @@ public class ProductController {
         }
     }
 
+    /** Product Creat, update, delete*/
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product){
         Product savedProduct = productService.saveProduct(product);
+        return ResponseEntity.ok(savedProduct);
+
+    }
+
+    @PutMapping
+    public ResponseEntity<Product> updateProduct(@RequestBody Product product){
+        Product savedProduct = productService.updateProduct(product);
         return ResponseEntity.ok(savedProduct);
 
     }
@@ -75,12 +83,6 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id){
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping
-    public ResponseEntity<Product> updateProduct(@RequestBody Product product){
-        Product savedProduct = productService.updateProduct(product);
-        return ResponseEntity.ok(savedProduct);
     }
 
     //获取产品的价格历史记录

@@ -9,4 +9,6 @@ package com.nus.dealhunter.controller;
  * @Create 2023/10/14 18:30
  */
 public class PriceHistoryControllerTest {
+
+
 }

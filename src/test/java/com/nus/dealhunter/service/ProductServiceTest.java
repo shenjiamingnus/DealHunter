@@ -1,6 +1,5 @@
 package com.nus.dealhunter.service;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.nus.dealhunter.model.Brand;
 import com.nus.dealhunter.model.Product;
 import com.nus.dealhunter.repository.BrandRepository;
@@ -91,6 +90,25 @@ class ProductServiceTest {
         // Assert
         Assert.assertEquals(productToSave, savedProduct);
     }
+
+    @Test
+    void testUpdateProduct() {
+        // Arrange
+        Product productToSave = new Product(1L, "NewProduct", 19.99);
+        Brand brand = new Brand(1L, "NewBrand");
+        productToSave.setBrand(brand);
+
+        when(productRepository.save(productToSave)).thenReturn(productToSave);
+        when(brandRepository.findById(brand.getId())).thenReturn(Optional.empty());
+        when(brandRepository.save(brand)).thenReturn(brand);
+
+        // Act
+        Product savedProduct = productService.saveProduct(productToSave);
+
+        // Assert
+        Assert.assertEquals(productToSave, savedProduct);
+    }
+
 
     @Test
     void testDeleteProduct() {
