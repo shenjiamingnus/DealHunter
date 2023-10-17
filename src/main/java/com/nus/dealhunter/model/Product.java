@@ -1,18 +1,15 @@
 package com.nus.dealhunter.model;
 
-import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 
 @Data
 @Entity
@@ -33,30 +30,91 @@ public class Product {
     @Size(max = 50)
     private String brandname;
 
+
     private String storeAddress;
 
     private String discription;
 
+    private String imageUrl;
+
     private Double currentPrice;
 
+    @JsonInclude
     private Double lowestPrice;
 
 
     @CreatedDate
     private Instant createDate;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "products_brands",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "brand_id"))
-    private Set<Brand> brands = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    private  Brand brand;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PriceHistory> priceHistoryList = new ArrayList<>();
 
+    public Product(String productname) {
+        this.productname = productname;
+
+    }
+
     public Product(String productname, String brandname) {
         this.productname = productname;
         this.brandname = brandname;
+    }
+
+    public Product(Long id, String productname, double currentPrice ) {
+        this.id = id;
+        this.productname = productname;
+        this.currentPrice = currentPrice;
+        this .lowestPrice = currentPrice;
+    }
+
+    public Product(String productname, String brandname, String storeAddress) {
+        this.productname = productname;
+        this.brandname = brandname;
+        this.storeAddress = storeAddress;
+    }
+
+    public Product(String productname, String brandname, String storeAddress, String discription) {
+        this.productname = productname;
+        this.brandname = brandname;
+        this.storeAddress = storeAddress;
+        this.discription = discription;
+    }
+
+
+
+    public String getProductname() {
+        return productname;
+    }
+
+    public void setProductname(String productname) {
+        this.productname = productname;
+    }
+
+    public String getStoreAddress() {
+        return storeAddress;
+    }
+
+    public void setStoreAddress(String storeAddress) {
+        this.storeAddress = storeAddress;
+    }
+
+    public String getDiscription() {
+        return discription;
+    }
+
+    public void setDiscription(String discription) {
+        this.discription = discription;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
 

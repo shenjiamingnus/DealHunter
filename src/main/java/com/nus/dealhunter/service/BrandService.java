@@ -1,4 +1,5 @@
 package com.nus.dealhunter.service;
+
 import com.nus.dealhunter.exception.BrandServiceException;
 import com.nus.dealhunter.model.Brand;
 import com.nus.dealhunter.model.Product;
@@ -8,10 +9,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import java.util.Optional;
+
+
 @Service
 public class BrandService {
     @Autowired
     private BrandRepository brandRepository;
+
 
     public Boolean checkBrandNameExists(String brandname) {
         return brandRepository.existsByBrandname(brandname);
@@ -50,6 +55,19 @@ public class BrandService {
         }catch (Exception e){
             throw new BrandServiceException("Failed to find brand", e);
         }
+    }
+
+
+    public Brand save(Brand brand){
+       return brandRepository.save(brand);
+    }
+
+    public  void delete(Long id){
+        brandRepository.deleteById(id);
+    }
+
+    public Optional<Brand> findById(Long id){
+        return brandRepository.findById(id);
     }
 
 
