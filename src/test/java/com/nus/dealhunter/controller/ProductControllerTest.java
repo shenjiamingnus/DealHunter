@@ -46,10 +46,10 @@ class ProductControllerTest{
         when(productService.getAllProducts()).thenReturn(productList);
 
         // 测试 Controller
-        List<Product> result = productController.getAllProducts();
+        ResponseEntity<List<Product>> result = productController.getAllProducts();
 
         // 断言
-        Assertions.assertEquals(productList, result);
+        Assertions.assertEquals(productList, result.getBody());
     }
 
     @Test
