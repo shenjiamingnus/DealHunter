@@ -6,11 +6,6 @@ import com.nus.dealhunter.repository.PriceHistoryRepository;
 import com.nus.dealhunter.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.nus.dealhunter.exception.ProductServiceException;
-import com.nus.dealhunter.model.Product;
-import com.nus.dealhunter.model.Brand;
-import com.nus.dealhunter.repository.ProductRepository;
-import com.nus.dealhunter.repository.BrandRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -48,6 +43,15 @@ public class ProductService {
     }
 
 
+    public List<Product> getProductByProductname(String productname) {
+        try {
+            return productRepository.findByProductname(productname);
+        }catch (Exception e){
+            throw new ProductServiceException("Failed to retrieve product with productname: " + productname, e);
+        }
+    }
+
+
     public List<Product> getProductByBrandname(String brandname){
         try {
             return productRepository.findByBrandname(brandname);
@@ -56,14 +60,6 @@ public class ProductService {
         }
     }
 
-
-    public List<Product> getProductByProductname(String productname) {
-        try {
-            return productRepository.findByProductname(productname);
-        }catch (Exception e){
-            throw new ProductServiceException("Failed to retrieve product with productname: " + productname, e);
-        }
-    }
 
     //when create a product, make LowestPrice = CurrentPrice
 
@@ -74,8 +70,17 @@ public class ProductService {
         }catch (Exception e){
             throw new ProductServiceException("Failed to save product", e);
         }
-
     }
+
+    public Product updateProduct(Product product) {
+        try {
+            return productRepository.save(product);
+        }catch (Exception e){
+            throw new ProductServiceException("Failed to save product", e);
+        }
+    }
+
+
 
     public void deleteProduct(Long id) {
         try {
@@ -99,6 +104,25 @@ public class ProductService {
             }
         } catch (Exception e) {
             throw new ProductServiceException("Failed to submit new price for product with productname " + productname + " and brandname " + brandname, e);
+        }
+    }
+
+    // 向商品的价格历史记录列表添加一条记录
+    public PriceHistory addPriceHistoryToProduct(Long productId, PriceHistory priceHistory) throws ProductServiceException {
+        try {
+            Optional<Product> optionalProduct = productRepository.findById(productId);
+            if (optionalProduct.isPresent()) {
+                Product product = optionalProduct.get();
+                priceHistory.setProduct(product);                       // 关联到商品
+                PriceHistory savedPriceHistory = priceHistoryRepository.save(priceHistory);
+                product.getPriceHistoryList().add(savedPriceHistory);   // 添加到商品的价格历史记录列表
+                productRepository.save(product);                        // 更新商品对象，以保存关联的价格历史记录
+                return savedPriceHistory;
+            } else {
+                throw new ProductServiceException("Product with ID " + productId + " not found");
+            }
+        } catch (Exception e) {
+            throw new ProductServiceException("Failed to add price history to product with ID " + productId, e);
         }
     }
 

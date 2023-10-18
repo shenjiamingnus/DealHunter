@@ -1,9 +1,14 @@
 package com.nus.dealhunter.controller;
 
 import com.nus.dealhunter.model.Product;
+import com.nus.dealhunter.model.User;
+import com.nus.dealhunter.payload.response.GeneralApiResponse;
 import com.nus.dealhunter.service.ProductService;
 import com.nus.dealhunter.exception.ProductServiceException;
 import com.nus.dealhunter.model.PriceHistory;
+import com.nus.dealhunter.payload.request.*;
+import com.nus.dealhunter.payload.response.GeneralApiResponse;
+import com.nus.dealhunter.payload.response.JwtAuthenticationResponse;
 import com.nus.dealhunter.util.JwtTokenUtil;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +33,13 @@ public class ProductController {
     JwtTokenUtil jwtTokenUtil;
 
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> products = productService.getAllProducts();
+        if(!products.isEmpty()){
+            return ResponseEntity.ok(products);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
     }
 
 
@@ -38,16 +48,6 @@ public class ProductController {
         return productService.getProductById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/productname")
-    public ResponseEntity<List<Product>> getProductByProductname(@RequestParam String productname){
-        List<Product> products = productService.getProductByProductname(productname);
-        if(!products.isEmpty()){
-            return ResponseEntity.ok(products);
-        }else{
-            return ResponseEntity.notFound().build();
-        }
     }
 
     @GetMapping("/brandname")
@@ -60,13 +60,21 @@ public class ProductController {
         }
     }
 
-
+    /** Product Creat, update, delete*/
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product){
         Product savedProduct = productService.saveProduct(product);
         return ResponseEntity.ok(savedProduct);
 
     }
+
+    @PutMapping
+    public ResponseEntity<Product> updateProduct(@RequestBody Product product){
+        Product savedProduct = productService.updateProduct(product);
+        return ResponseEntity.ok(savedProduct);
+
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id){
@@ -80,12 +88,9 @@ public class ProductController {
     @GetMapping("/getPriceHistory")
     public ResponseEntity<List<PriceHistory>> getPriceHistory(@RequestParam String productname,
                                                               @RequestParam String brandname) {
-        try {
-            List<PriceHistory> priceHistoryList = productService.getProductPriceHistory(productname, brandname);
-            return ResponseEntity.ok(priceHistoryList);
-        } catch (ProductServiceException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        List<PriceHistory> priceHistoryList = productService.getProductPriceHistory(productname, brandname);
+        return ResponseEntity.ok(priceHistoryList);
+
     }
 
     @PostMapping("/submitNewPrice")

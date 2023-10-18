@@ -1,14 +1,6 @@
 package com.nus.dealhunter.model;
 
 
-import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.time.Instant;
-import java.util.Set;
 import java.time.Instant;
 import java.util.List;
 import javax.persistence.*;

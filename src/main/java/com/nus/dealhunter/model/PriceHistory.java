@@ -14,8 +14,7 @@ public class PriceHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private double price;
+    private Double price;
     private LocalDate date;
 
 
