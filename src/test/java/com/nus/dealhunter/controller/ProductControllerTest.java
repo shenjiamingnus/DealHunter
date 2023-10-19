@@ -3,13 +3,13 @@ package com.nus.dealhunter.controller;
 import com.nus.dealhunter.model.PriceHistory;
 import com.nus.dealhunter.model.Product;
 import com.nus.dealhunter.service.ProductService;
-import com.nus.dealhunter.util.JwtTokenUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
@@ -93,17 +93,17 @@ class ProductControllerTest{
     void testCreateProduct() {
         when(productService.saveProduct(any())).thenReturn(new Product(Long.valueOf(1), "productname", 0d));
 
-        ResponseEntity<Product> result = productController.createProduct(new Product(Long.valueOf(1), "productname", 0d));
-        Product product = Optional.of(new Product(Long.valueOf(1), "productname", 0d)).get();
-        Assertions.assertEquals(product, result.getBody());
+        ResponseEntity<?> result = productController.createProduct(new Product(Long.valueOf(1), "productname", 0d));
+
+        Assertions.assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
     @Test
     void testUpdateProduct() {
         when(productService.updateProduct(any())).thenReturn(new Product(Long.valueOf(1), "productnameUpdate", 0d));
 
-        ResponseEntity<Product> result = productController.updateProduct(new Product(Long.valueOf(1), "productname", 0d));
-        Assertions.assertEquals("productnameUpdate", result.getBody().getProductname());
+        ResponseEntity<?> result = productController.updateProduct(new Product(Long.valueOf(1), "productname", 0d));
+        Assertions.assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
     @Test

@@ -1,23 +1,17 @@
 package com.nus.dealhunter.controller;
 
 import com.nus.dealhunter.model.Product;
-import com.nus.dealhunter.model.User;
 import com.nus.dealhunter.payload.response.GeneralApiResponse;
 import com.nus.dealhunter.service.ProductService;
 import com.nus.dealhunter.exception.ProductServiceException;
 import com.nus.dealhunter.model.PriceHistory;
-import com.nus.dealhunter.payload.request.*;
-import com.nus.dealhunter.payload.response.GeneralApiResponse;
-import com.nus.dealhunter.payload.response.JwtAuthenticationResponse;
-import com.nus.dealhunter.util.JwtTokenUtil;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Optional;
+
 
 
 @Api("Product/")
@@ -28,9 +22,6 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
-
-    @Autowired
-    JwtTokenUtil jwtTokenUtil;
 
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
@@ -71,17 +62,24 @@ public class ProductController {
 
     /** Product Creat, update, delete*/
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product){
+    public ResponseEntity<?> createProduct(@RequestBody Product product){
         Product savedProduct = productService.saveProduct(product);
-        return ResponseEntity.ok(savedProduct);
+        if(savedProduct != null){
+            return ResponseEntity.ok(new GeneralApiResponse(true,"Product created!",product));
+        }else {
+            return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to created"));
+        }
 
     }
 
     @PutMapping
-    public ResponseEntity<Product> updateProduct(@RequestBody Product product){
+    public ResponseEntity<?> updateProduct(@RequestBody Product product){
         Product savedProduct = productService.updateProduct(product);
-        return ResponseEntity.ok(savedProduct);
-
+        if(savedProduct != null){
+            return ResponseEntity.ok(new GeneralApiResponse(true,"Product updated!",product));
+        }else {
+            return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to updated"));
+        }
     }
 
 
