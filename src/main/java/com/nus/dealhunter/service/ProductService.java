@@ -2,19 +2,22 @@ package com.nus.dealhunter.service;
 
 import com.nus.dealhunter.model.PriceHistory;
 import com.nus.dealhunter.model.Product;
+import com.nus.dealhunter.model.User;
 import com.nus.dealhunter.repository.PriceHistoryRepository;
 import com.nus.dealhunter.repository.ProductRepository;
+import com.nus.dealhunter.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.nus.dealhunter.exception.ProductServiceException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ProductService {
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private ProductRepository productRepository;
@@ -63,7 +66,7 @@ public class ProductService {
     public Product saveProduct(Product product) {
         try {
             product.setLowestPrice(product.getCurrentPrice());
-            PriceHistory newPriceHistory = new PriceHistory(product.getCurrentPrice(), LocalDate.now(), product);
+            PriceHistory newPriceHistory = new PriceHistory(product.getId(),product.getCurrentPrice(), LocalDate.now(), product);
             if(product.getCurrentPrice() != 0){
                 product.getPriceHistoryList().add(newPriceHistory);
             }
@@ -166,7 +169,7 @@ public class ProductService {
                 }
 
                 // 创建新的价格历史记录对象
-                PriceHistory newPriceHistory = new PriceHistory(newPrice, LocalDate.now(), product);
+                PriceHistory newPriceHistory = new PriceHistory(product.getId(),newPrice, LocalDate.now(), product);
 
                 // 将新的价格历史记录添加到历史价格列表中
                 priceHistoryList.add(newPriceHistory);
@@ -181,6 +184,62 @@ public class ProductService {
             }
         } catch (Exception e) {
             throw new ProductServiceException("Failed to submit new price for product with productId " + productId, e);
+        }
+    }
+
+    public void addUserWatchesProduct(Long userId, Long productId) {
+        try {
+            Optional<User> optionalUser = userRepository.findById(userId);
+            Optional<Product> optionalProduct = productRepository.findById(productId);
+
+            if (optionalUser.isPresent() && optionalProduct.isPresent()) {
+                User user = optionalUser.get();
+                Product product = optionalProduct.get();
+
+                // 添加用户到产品的关注列表
+                product.addWatcher(user);
+                productRepository.save(product);
+            } else {
+                // 处理用户或产品不存在的情况
+                throw new ProductServiceException("User or Product not found");
+            }
+        } catch (Exception e) {
+            throw new ProductServiceException("Failed to add user to product watchers", e);
+        }
+    }
+
+    public void removeUserWatchesProduct(Long userId, Long productId) {
+        try {
+            Optional<User> optionalUser = userRepository.findById(userId);
+            Optional<Product> optionalProduct = productRepository.findById(productId);
+
+            if (optionalUser.isPresent() && optionalProduct.isPresent()) {
+                User user = optionalUser.get();
+                Product product = optionalProduct.get();
+
+                // 从产品的关注列表中移除用户
+                product.removeWatcher(user);
+                productRepository.save(product);
+            } else {
+                throw new ProductServiceException("User or Product not found");
+            }
+        } catch (Exception e) {
+            throw new ProductServiceException("Failed to remove user from product watchers", e);
+        }
+    }
+
+    public boolean isUserWatchingProduct(Long userId, Long productId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+
+        if (optionalUser.isPresent() && optionalProduct.isPresent()) {
+            User user = optionalUser.get();
+            Product product = optionalProduct.get();
+
+            // 检查用户是否在产品的关注列表中
+            return product.getWatchers().contains(user);
+        } else {
+            throw new ProductServiceException("User or Product not found");
         }
     }
 

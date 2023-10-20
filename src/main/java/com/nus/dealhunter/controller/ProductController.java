@@ -29,12 +29,15 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @Autowired
-    JwtTokenUtil jwtTokenUtil;
 
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> products = productService.getAllProducts();
+        if(!products.isEmpty()){
+            return ResponseEntity.ok(products);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/productname")
@@ -101,6 +104,23 @@ public class ProductController {
         return ResponseEntity.ok(updatedProduct);
     }
 
+    @PostMapping("/{productId}/addWatchers/{userId}")
+    public ResponseEntity<Void> addUserWatchesProduct(@PathVariable Long userId, @PathVariable Long productId) {
+        productService.addUserWatchesProduct(userId, productId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{productId}/deleteWatchers/{userId}")
+    public ResponseEntity<Void> removeUserWatchesProduct(@PathVariable Long userId, @PathVariable Long productId) {
+        productService.removeUserWatchesProduct(userId, productId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{productId}/checkWatchers/{userId}")
+    public ResponseEntity<Boolean> isUserWatchingProduct(@PathVariable Long userId, @PathVariable Long productId) {
+        boolean isWatching = productService.isUserWatchingProduct(userId, productId);
+        return new ResponseEntity<>(isWatching, HttpStatus.OK);
+    }
 
 
 }

@@ -25,7 +25,14 @@ public class PriceHistory {
     @JsonIgnore
     private Product product;
 
-    public PriceHistory(double price, LocalDate date, Product product) {
+//    public PriceHistory(double price, LocalDate date, Product product) {
+//        this.price = price;
+//        this.date = date;
+//        this.product = product;
+//    }
+
+    public PriceHistory(Long id, double price, LocalDate date, Product product) {
+        this.id = id;
         this.price = price;
         this.date = date;
         this.product = product;

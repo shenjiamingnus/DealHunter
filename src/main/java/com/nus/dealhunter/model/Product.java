@@ -2,7 +2,9 @@ package com.nus.dealhunter.model;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -33,7 +35,7 @@ public class Product {
 
     private String storeAddress;
 
-    private String discription;
+    private String description;
 
     private String imageUrl;
 
@@ -53,35 +55,48 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PriceHistory> priceHistoryList = new ArrayList<>();
 
-    public Product(String productname) {
-        this.productname = productname;
-    }
+    @ManyToMany(mappedBy = "watchedProducts")
+    private Set<User> watchers = new HashSet<>();
+
 
     public Product(String productname, String brandname) {
         this.productname = productname;
         this.brandname = brandname;
     }
 
-    public Product(Long id, String productname, double currentPrice ) {
+    public Product(Long id, String productname, String brandname,double currentPrice) {
         this.id = id;
         this.productname = productname;
+        this.brandname = brandname;
         this.currentPrice = currentPrice;
-        this .lowestPrice = currentPrice;
+        this.lowestPrice = currentPrice;
     }
 
-    public Product(String productname, String brandname, String storeAddress) {
+    public Product(String productname, String brandname,double currentPrice ) {
         this.productname = productname;
         this.brandname = brandname;
-        this.storeAddress = storeAddress;
+        this.currentPrice = currentPrice;
+        this.lowestPrice = currentPrice;
     }
 
-    public Product(String productname, String brandname, String storeAddress, String discription) {
+    public Product(String productname, String brandname, double currentPrice,String storeAddress, String description) {
         this.productname = productname;
         this.brandname = brandname;
+        this.currentPrice = currentPrice;
+        this.lowestPrice = currentPrice;
         this.storeAddress = storeAddress;
-        this.discription = discription;
+        this.description = description;
     }
 
+    public Product(String productname, String brandname, double currentPrice, String storeAddress, String description, String imageUrl) {
+        this.productname = productname;
+        this.brandname = brandname;
+        this.currentPrice = currentPrice;
+        this.lowestPrice = currentPrice;
+        this.storeAddress = storeAddress;
+        this.description = description;
+        this.imageUrl = imageUrl;
+    }
 
 
     public String getProductname() {
@@ -102,6 +117,14 @@ public class Product {
 
     public double getLowestPrice() {
         return lowestPrice;
+    }
+
+    public void addWatcher(User user) {
+        watchers.add(user);
+    }
+
+    public void removeWatcher(User user) {
+        watchers.remove(user);
     }
 
 

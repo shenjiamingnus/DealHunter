@@ -3,12 +3,17 @@ package com.nus.dealhunter.controller;
 import com.nus.dealhunter.model.PriceHistory;
 import com.nus.dealhunter.model.Product;
 import com.nus.dealhunter.service.ProductService;
+import com.nus.dealhunter.controller.ProductController;
+
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
@@ -35,9 +40,9 @@ class ProductControllerTest{
     void testGetAllProducts() {
 
         // 创建模拟的 Product 对象
-        Product product1 = new Product(Long.valueOf(1), "productname", 0d);
-        Product product2 = new Product(Long.valueOf(2), "anotherproduct", 10.5d);
-        Product product3 = new Product(Long.valueOf(3), "yetanotherproduct", 20.0d);
+        Product product1 = new Product( "productname1", "brandname1");
+        Product product2 = new Product( "anotherproduct", "brandname2");
+        Product product3 = new Product( "yetanotherproduct", "brandname1");
 
         // 使用 Arrays.asList 创建 List
         List<Product> productList = Arrays.asList(product1, product2, product3);
@@ -46,18 +51,17 @@ class ProductControllerTest{
         when(productService.getAllProducts()).thenReturn(productList);
 
         // 测试 Controller
-        List<Product> result = productController.getAllProducts();
+        ResponseEntity<List<Product>> result = productController.getAllProducts();
 
         // 断言
-        Assertions.assertEquals(productList, result);
-
+        Assertions.assertEquals(productList, result.getBody());
     }
 
     @Test
     void testGetProductByProductname() {
 
         // 创建模拟的 Product 对象
-        Product product1 = new Product(Long.valueOf(1), "productname", 0d);
+        Product product1 = new Product("productname", "brandname",0d);
 
         // 使用 Arrays.asList 创建 List
         List<Product> productList = Arrays.asList(product1);
@@ -75,7 +79,7 @@ class ProductControllerTest{
     @Test
     void testGetProductById() {
         // 创建模拟的 Product 对象
-        Product product1 = new Product(Long.valueOf(1), "productname", 0d);
+        Product product1 = new Product("productname", "brandname",0d);
 
         // 使用 Arrays.asList 创建 List
         List<Product> productList = Arrays.asList(product1);
@@ -92,18 +96,18 @@ class ProductControllerTest{
 
     @Test
     void testCreateProduct() {
-        when(productService.saveProduct(any())).thenReturn(new Product(Long.valueOf(1), "productname", 0d));
+        when(productService.saveProduct(any())).thenReturn(new Product("productname","brandname", 0d));
 
-        ResponseEntity<Product> result = productController.createProduct(new Product(Long.valueOf(1), "productname", 0d));
-        Product product = Optional.of(new Product(Long.valueOf(1), "productname", 0d)).get();
+        ResponseEntity<Product> result = productController.createProduct(new Product( "productname","brandname", 0d));
+        Product product = Optional.of(new Product("productname", "brandname",0d)).get();
         Assertions.assertEquals(product, result.getBody());
     }
 
     @Test
     void testUpdateProduct() {
-        when(productService.updateProduct(any())).thenReturn(new Product(Long.valueOf(1), "productnameUpdate", 0d));
+        when(productService.updateProduct(any())).thenReturn(new Product("productnameUpdate","brandname",0d));
 
-        ResponseEntity<Product> result = productController.updateProduct(new Product(Long.valueOf(1), "productname", 0d));
+        ResponseEntity<Product> result = productController.updateProduct(new Product("productname","brandname",0d));
         Assertions.assertEquals("productnameUpdate", result.getBody().getProductname());
     }
 
@@ -114,11 +118,10 @@ class ProductControllerTest{
     }
 
     @Test
-
     void testGetPriceHistory() {
         // 创建模拟的 Product 对象和 PriceHistory 对象
-        Product product1 = new Product(Long.valueOf(1), "productname", 0d);
-        PriceHistory priceHistory1 = new PriceHistory(0d, LocalDate.of(2023, Month.OCTOBER, 11), product1);
+        Product product1 = new Product("productname","brandname",0d);
+        PriceHistory priceHistory1 = new PriceHistory(Long.valueOf(1),0d, LocalDate.of(2023, Month.OCTOBER, 11), product1);
 
         // 使用 Arrays.asList 创建 List
         List<PriceHistory> priceHistoryList = Arrays.asList(priceHistory1);
@@ -136,7 +139,7 @@ class ProductControllerTest{
     @Test
     void testSubmitNewPrice() {
         // 创建模拟的 Product 对象
-        Product product1 = new Product(Long.valueOf(1), "productname", 1d);
+        Product product1 = new Product("productname","brandname",1d);
 
         // 模拟 submitNewPrice 方法的行为
         when(productService.submitNewPrice(anyLong(), anyDouble())).thenReturn(product1);
@@ -147,6 +150,10 @@ class ProductControllerTest{
         // 断言
         Assertions.assertEquals(product1, result.getBody());
     }
+
+
+
+
 }
 
 //Generated with love by TestMe :) Please report issues and submit feature requests at: https://weirddev.com/forum#!/testme
