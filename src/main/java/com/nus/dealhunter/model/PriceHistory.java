@@ -3,9 +3,10 @@ package com.nus.dealhunter.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.Instant;
 
 @Data
 @Entity
@@ -17,7 +18,8 @@ public class PriceHistory {
 
     private Double price;
 
-    private LocalDate date;
+    @CreatedDate
+    private Instant createDate;
 
 
     @ManyToOne
@@ -31,15 +33,15 @@ public class PriceHistory {
 //        this.product = product;
 //    }
 
-    public PriceHistory(Long id, double price, LocalDate date, Product product) {
+    public PriceHistory(Long id, double price, Instant createDate, Product product) {
         this.id = id;
         this.price = price;
-        this.date = date;
+        this.createDate = createDate;
         this.product = product;
     }
 
-    public LocalDate getPriceHistoryDate() {
-        return date;
+    public Instant getPriceHistoryDate() {
+        return createDate;
     }
 
     public double getPriceFromPriceHistory() {

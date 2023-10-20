@@ -72,7 +72,6 @@ public class ProductController {
         }else {
             return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to created"));
         }
-
     }
 
 //

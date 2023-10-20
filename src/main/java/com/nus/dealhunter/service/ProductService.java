@@ -193,7 +193,7 @@ public class ProductService {
                 }
 
                 // 创建新的价格历史记录对象
-                PriceHistory newPriceHistory = new PriceHistory(product.getId(),newPrice, LocalDate.now(), product);
+                PriceHistory newPriceHistory = new PriceHistory(product.getId(),newPrice, product.getCreateDate(), product);
 
                 // 将新的价格历史记录添加到历史价格列表中
                 priceHistoryList.add(newPriceHistory);

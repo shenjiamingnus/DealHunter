@@ -19,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
@@ -143,7 +144,7 @@ class ProductControllerTest{
     void testGetPriceHistory() {
         // 创建模拟的 Product 对象和 PriceHistory 对象
         Product product1 = new Product("productname","brandname",0d);
-        PriceHistory priceHistory1 = new PriceHistory(Long.valueOf(1),0d, LocalDate.of(2023, Month.OCTOBER, 11), product1);
+        PriceHistory priceHistory1 = new PriceHistory(Long.valueOf(1),0d, Instant.now(), product1);
 
         // 使用 Arrays.asList 创建 List
         List<PriceHistory> priceHistoryList = Arrays.asList(priceHistory1);

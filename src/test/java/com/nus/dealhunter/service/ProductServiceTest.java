@@ -185,7 +185,7 @@ class ProductServiceTest {
         Long productId = 1L;
         Long priceHistoryId = 2L;
         Product mockProduct = new Product(productId, "productname", "brandname", 29.99);
-        PriceHistory priceHistory = new PriceHistory(priceHistoryId, 19.99, LocalDate.now(), mockProduct);
+        PriceHistory priceHistory = new PriceHistory(priceHistoryId, 19.99, mockProduct.getCreateDate(), mockProduct);
 
         Mockito.when(productRepository.findById(productId)).thenReturn(Optional.of(mockProduct));
         Mockito.when(priceHistoryRepository.save(priceHistory)).thenReturn(priceHistory);
@@ -204,7 +204,7 @@ class ProductServiceTest {
         Long productId = 1L;
         Long priceHistoryId = 2L;
         Product mockProduct = new Product(productId, "productname", "brandname", 29.99);
-        PriceHistory priceHistory = new PriceHistory(priceHistoryId, 19.99, LocalDate.now(), mockProduct);
+        PriceHistory priceHistory = new PriceHistory(priceHistoryId, 19.99, mockProduct.getCreateDate(), mockProduct);
         mockProduct.getPriceHistoryList().add(priceHistory);
 
         Mockito.when(productRepository.findById(productId)).thenReturn(Optional.of(mockProduct));
@@ -228,7 +228,7 @@ class ProductServiceTest {
         List<PriceHistory> priceHistoryList = new ArrayList<>();
         existingProduct.setPriceHistoryList(priceHistoryList);
 
-        PriceHistory newPriceHistory = new PriceHistory(1L, newPrice, LocalDate.now(), existingProduct);
+        PriceHistory newPriceHistory = new PriceHistory(1L, newPrice, existingProduct.getCreateDate(), existingProduct);
 
         when(productRepository.findById(productId)).thenReturn(Optional.of(existingProduct));
         when(priceHistoryRepository.save(any(PriceHistory.class))).thenReturn(newPriceHistory);

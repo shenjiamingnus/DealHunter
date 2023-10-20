@@ -52,7 +52,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "brand_id")
-    private  Brand brand;
+    private Brand brand;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PriceHistory> priceHistoryList = new ArrayList<>();
