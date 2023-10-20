@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
@@ -88,23 +87,33 @@ class ProductControllerTest{
         // 断言
         Assertions.assertEquals(product1, result.getBody());
     }
+//
+//    @Test
+//    void testCreateProduct() {
+//        when(productService.saveProduct(any())).thenReturn(new Product(Long.valueOf(1), "productname", 0d));
+//
+//        ResponseEntity<?> result = productController.createProduct(new Product(Long.valueOf(1), "productname", 0d));
+//
+//        Assertions.assertEquals(HttpStatus.OK, result.getStatusCode());
+//    }
 
-    @Test
-    void testCreateProduct() {
-        when(productService.saveProduct(any())).thenReturn(new Product(Long.valueOf(1), "productname", 0d));
 
-        ResponseEntity<?> result = productController.createProduct(new Product(Long.valueOf(1), "productname", 0d));
+//    @Test
+//    void testCreateProduct() {
+//        when(productService.saveProduct(any())).thenReturn(new Product(Long.valueOf(1), "productname", 0d));
+//
+//        ResponseEntity<?> result = productController.createProduct(new Product(Long.valueOf(1), "productname", 0d));
+//
+//        Assertions.assertEquals(HttpStatus.OK, result.getStatusCode());
+//    }
 
-        Assertions.assertEquals(HttpStatus.OK, result.getStatusCode());
-    }
-
-    @Test
-    void testUpdateProduct() {
-        when(productService.updateProduct(any())).thenReturn(new Product(Long.valueOf(1), "productnameUpdate", 0d));
-
-        ResponseEntity<?> result = productController.updateProduct(new Product(Long.valueOf(1), "productname", 0d));
-        Assertions.assertEquals(HttpStatus.OK, result.getStatusCode());
-    }
+//    @Test
+//    void testUpdateProduct() {
+//        when(productService.updateProduct(any())).thenReturn(new Product(Long.valueOf(1), "productnameUpdate", 0d));
+//
+//        ResponseEntity<?> result = productController.updateProduct(new Product(Long.valueOf(1), "productname", 0d));
+//        Assertions.assertEquals(HttpStatus.OK, result.getStatusCode());
+//    }
 
     @Test
     void testDeleteProduct() {

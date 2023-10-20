@@ -1,6 +1,8 @@
 package com.nus.dealhunter.controller;
 
 import com.nus.dealhunter.model.Product;
+import com.nus.dealhunter.payload.request.CreateProductRequest;
+import com.nus.dealhunter.payload.request.UpdateProductRequest;
 import com.nus.dealhunter.payload.response.GeneralApiResponse;
 import com.nus.dealhunter.service.ProductService;
 import com.nus.dealhunter.exception.ProductServiceException;
@@ -61,27 +63,48 @@ public class ProductController {
     }
 
     /** Product Creat, update, delete*/
+//    @PostMapping
+//    public ResponseEntity<?> createProduct(@RequestBody Product product){
+//        Product savedProduct = productService.saveProduct(product);
+//        if(savedProduct != null){
+//            return ResponseEntity.ok(new GeneralApiResponse(true,"Product created!",product));
+//        }else {
+//            return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to created"));
+//        }
+//
+//    }
+
     @PostMapping
-    public ResponseEntity<?> createProduct(@RequestBody Product product){
-        Product savedProduct = productService.saveProduct(product);
+    public ResponseEntity<GeneralApiResponse> createProduct(@RequestBody CreateProductRequest createProductRequest){
+        Product savedProduct = productService.createProduct(createProductRequest);
         if(savedProduct != null){
-            return ResponseEntity.ok(new GeneralApiResponse(true,"Product created!",product));
+            return ResponseEntity.ok(new GeneralApiResponse(true,"Product created!"));
         }else {
             return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to created"));
         }
 
     }
 
+//
+//    @PutMapping
+//    public ResponseEntity<?> updateProduct(@RequestBody Product product){
+//        Product savedProduct = productService.updateProduct(product);
+//        if(savedProduct != null){
+//            return ResponseEntity.ok(new GeneralApiResponse(true,"Product updated!",product));
+//        }else {
+//            return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to updated"));
+//        }
+//    }
+
     @PutMapping
-    public ResponseEntity<?> updateProduct(@RequestBody Product product){
-        Product savedProduct = productService.updateProduct(product);
-        if(savedProduct != null){
-            return ResponseEntity.ok(new GeneralApiResponse(true,"Product updated!",product));
+    public ResponseEntity<GeneralApiResponse> updateProduct(@RequestBody UpdateProductRequest updateProductRequest){
+        Product updatedProduct = productService.updateProduct(updateProductRequest);
+        if(updatedProduct != null){
+            return ResponseEntity.ok(new GeneralApiResponse(true,"Product updated!"));
         }else {
             return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to updated"));
         }
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id){

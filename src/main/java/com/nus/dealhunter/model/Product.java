@@ -33,7 +33,7 @@ public class Product {
 
     private String storeAddress;
 
-    private String discription;
+    private String description;
 
     private String imageUrl;
 
@@ -55,7 +55,6 @@ public class Product {
 
     public Product(String productname) {
         this.productname = productname;
-
     }
 
     public Product(String productname, String brandname) {
@@ -80,7 +79,7 @@ public class Product {
         this.productname = productname;
         this.brandname = brandname;
         this.storeAddress = storeAddress;
-        this.discription = discription;
+        this.description = discription;
     }
 
 
@@ -102,11 +101,11 @@ public class Product {
     }
 
     public String getDiscription() {
-        return discription;
+        return description;
     }
 
     public void setDiscription(String discription) {
-        this.discription = discription;
+        this.description = discription;
     }
 
     public String getImageUrl() {

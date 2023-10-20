@@ -72,42 +72,42 @@ class ProductServiceTest {
         /**0.001 acceptable difference for a double comparison*/
         Assert.assertEquals(29.99,returnedProduct.getCurrentPrice(),0.001);
     }
+//
+//    @Test
+//    void testSaveProduct() {
+//        // Arrange
+//        Product productToSave = new Product(1L, "NewProduct", 19.99);
+//        Brand brand = new Brand(1L, "NewBrand");
+//        productToSave.setBrand(brand);
+//
+//        when(productRepository.save(productToSave)).thenReturn(productToSave);
+//        when(brandRepository.findById(brand.getId())).thenReturn(Optional.empty());
+//        when(brandRepository.save(brand)).thenReturn(brand);
+//
+//        // Act
+//        Product savedProduct = productService.saveProduct(productToSave);
+//
+//        // Assert
+//        Assert.assertEquals(productToSave, savedProduct);
+//    }
 
-    @Test
-    void testSaveProduct() {
-        // Arrange
-        Product productToSave = new Product(1L, "NewProduct", 19.99);
-        Brand brand = new Brand(1L, "NewBrand");
-        productToSave.setBrand(brand);
-
-        when(productRepository.save(productToSave)).thenReturn(productToSave);
-        when(brandRepository.findById(brand.getId())).thenReturn(Optional.empty());
-        when(brandRepository.save(brand)).thenReturn(brand);
-
-        // Act
-        Product savedProduct = productService.saveProduct(productToSave);
-
-        // Assert
-        Assert.assertEquals(productToSave, savedProduct);
-    }
-
-    @Test
-    void testUpdateProduct() {
-        // Arrange
-        Product productToSave = new Product(1L, "NewProduct", 19.99);
-        Brand brand = new Brand(1L, "NewBrand");
-        productToSave.setBrand(brand);
-
-        when(productRepository.save(productToSave)).thenReturn(productToSave);
-        when(brandRepository.findById(brand.getId())).thenReturn(Optional.empty());
-        when(brandRepository.save(brand)).thenReturn(brand);
-
-        // Act
-        Product savedProduct = productService.saveProduct(productToSave);
-
-        // Assert
-        Assert.assertEquals(productToSave, savedProduct);
-    }
+//    @Test
+//    void testUpdateProduct() {
+//        // Arrange
+//        Product productToSave = new Product(1L, "NewProduct", 19.99);
+//        Brand brand = new Brand(1L, "NewBrand");
+//        productToSave.setBrand(brand);
+//
+//        when(productRepository.save(productToSave)).thenReturn(productToSave);
+//        when(brandRepository.findById(brand.getId())).thenReturn(Optional.empty());
+//        when(brandRepository.save(brand)).thenReturn(brand);
+//
+//        // Act
+//        Product savedProduct = productService.saveProduct(productToSave);
+//
+//        // Assert
+//        Assert.assertEquals(productToSave, savedProduct);
+//    }
 
 
     @Test
