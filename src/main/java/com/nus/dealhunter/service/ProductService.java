@@ -62,17 +62,11 @@ public class ProductService {
         }
     }
 
-    //when create a product, make LowestPrice = CurrentPrice
-//    public Product saveProduct(Product product) {
-//        try {
-//            product.setLowestPrice(product.getCurrentPrice());
-//            return productRepository.save(product);
-//        }catch (Exception e){
-//            throw new ProductServiceException("Failed to save product", e);
-//        }
-//    }
 
     public Product createProduct(CreateProductRequest createProductRequest){
+        if (createProductRequest == null) {
+            return null;
+        }
         Product product = new Product();
         product.setProductname(createProductRequest.getProductname());
         product.setBrandname(createProductRequest.getBrandname());
@@ -82,17 +76,14 @@ public class ProductService {
         product.setCurrentPrice(createProductRequest.getCurrentPrice());
         product.setLowestPrice(createProductRequest.getCurrentPrice());
         product.setCreateDate(Instant.now());
-        product.setBrand(new Brand(createProductRequest.getBrand_id(),createProductRequest.getBrandname()));
+        //product.setBrand(new Brand(createProductRequest.getBrand_id(),createProductRequest.getBrandname()));
+        if (createProductRequest.getBrand_id() != null && createProductRequest.getBrandname() != null) {
+            product.setBrand(new Brand(createProductRequest.getBrand_id(), createProductRequest.getBrandname()));
+        }
         return productRepository.save(product);
     }
 
-//    public Product updateProduct(Product product) {
-//        try {
-//            return productRepository.save(product);
-//        }catch (Exception e){
-//            throw new ProductServiceException("Failed to save product", e);
-//        }
-//    }
+
 
     public Product updateProduct(UpdateProductRequest updateProductRequest){
         Product product = new Product();

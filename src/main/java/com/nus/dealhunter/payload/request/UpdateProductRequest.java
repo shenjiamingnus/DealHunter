@@ -33,4 +33,7 @@ public class UpdateProductRequest {
 
     @NotBlank
     private Long brand_id;
+
+    public UpdateProductRequest(long product_id,String productname, String brandname, String storeAddress, String description, String imageUrl, double currentPrice, long brand_id) {
+    }
 }

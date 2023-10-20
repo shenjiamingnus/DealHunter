@@ -31,4 +31,6 @@ public class CreateProductRequest {
     private Long brand_id;
 
 
+    public CreateProductRequest(String productname, String brandname, String storeAddress, String description, String imageUrl, double currentPrice, long brand_id) {
+    }
 }
