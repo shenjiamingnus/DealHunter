@@ -35,15 +35,16 @@ public class PriceHistoryService {
 //            throw new PriceHistoryServiceException("Failed to create priceHistory ", e);
 //        }
 //    }
-public PriceHistory createPriceHistory(CreatePriceHistoryRequest createPriceHistoryRequest) {
-    if (createPriceHistoryRequest == null) {
-        return null;
+    public PriceHistory createPriceHistory(CreatePriceHistoryRequest createPriceHistoryRequest) {
+        if (createPriceHistoryRequest == null) {
+            return null;
+        }
+        PriceHistory priceHistory = new PriceHistory();
+        priceHistory.setPrice(createPriceHistoryRequest.getPrice());
+        priceHistory.setCreateDate(Instant.now());
+
+        return priceHistoryRepository.save(priceHistory);
     }
-    PriceHistory priceHistory = new PriceHistory();
-    priceHistory.setPrice(createPriceHistoryRequest.getPrice());
-    priceHistory.setCreateDate(Instant.now());
-    return priceHistoryRepository.save(priceHistory);
-}
 
 
     public PriceHistory updatePriceHistory(PriceHistory priceHistory){

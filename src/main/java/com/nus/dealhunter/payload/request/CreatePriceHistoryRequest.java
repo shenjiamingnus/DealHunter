@@ -21,7 +21,6 @@ public class CreatePriceHistoryRequest {
     private Long product_id;
 
     public CreatePriceHistoryRequest(Long id, Double price, Instant createDate, Long product_id){
-
     }
 
 }

@@ -46,7 +46,6 @@ public class PriceHistoryController {
         }else {
             return ResponseEntity.ok(new GeneralApiResponse(false,"PriceHistory failed to created"));
         }
-//        return new ResponseEntity<>(savedPriceHistory, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/remove/{priceHistoryId}")
@@ -83,8 +82,6 @@ public class PriceHistoryController {
         List<PriceHistory> priceHistoryList = priceHistoryService.viewHistoricalPriceTrends(Id, startDate, endDate);
         return ResponseEntity.ok(priceHistoryList);
     }
-
-
 
 
 
