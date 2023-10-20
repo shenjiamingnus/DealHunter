@@ -2,14 +2,17 @@ package com.nus.dealhunter.controller;
 
 import com.nus.dealhunter.model.PriceHistory;
 import com.nus.dealhunter.model.Product;
+import com.nus.dealhunter.payload.request.CreateProductRequest;
+import com.nus.dealhunter.payload.request.UpdateProductRequest;
+import com.nus.dealhunter.payload.response.GeneralApiResponse;
 import com.nus.dealhunter.service.ProductService;
-import com.nus.dealhunter.util.JwtTokenUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
@@ -89,21 +92,42 @@ class ProductControllerTest{
         Assertions.assertEquals(product1, result.getBody());
     }
 
+
     @Test
     void testCreateProduct() {
-        when(productService.saveProduct(any())).thenReturn(new Product(Long.valueOf(1), "productname", 0d));
 
-        ResponseEntity<Product> result = productController.createProduct(new Product(Long.valueOf(1), "productname", 0d));
-        Product product = Optional.of(new Product(Long.valueOf(1), "productname", 0d)).get();
-        Assertions.assertEquals(product, result.getBody());
+        // 模拟 ProductService 的行为
+        CreateProductRequest createProductRequest = new CreateProductRequest("Product 1", "Brand 1", "Store 1", "Description 1", "https://example.com", 19.99, 1L);
+        when(productService.createProduct(createProductRequest)).thenReturn(new Product());
+
+        // 调用控制器方法
+        ResponseEntity<GeneralApiResponse> response = productController.createProduct(createProductRequest);
+
+        // 验证返回结果
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertTrue(response.getBody().getSuccess());
+        Assertions.assertEquals("Product created!", response.getBody().getMessage());
+
+        // 验证 ProductService 被调用
+        verify(productService, times(1)).createProduct(createProductRequest);
     }
+
 
     @Test
     void testUpdateProduct() {
-        when(productService.updateProduct(any())).thenReturn(new Product(Long.valueOf(1), "productnameUpdate", 0d));
+        // 模拟 ProductService 的行为
+        UpdateProductRequest updateProductRequest = new UpdateProductRequest(1L,"Product 1", "Brand 1", "Store 1", "Description 1", "https://example.com", 19.99, 1L);
+        when(productService.updateProduct(updateProductRequest)).thenReturn(new Product());
 
-        ResponseEntity<Product> result = productController.updateProduct(new Product(Long.valueOf(1), "productname", 0d));
-        Assertions.assertEquals("productnameUpdate", result.getBody().getProductname());
+        // 调用控制器方法
+        ResponseEntity<GeneralApiResponse> response = productController.updateProduct(updateProductRequest);
+
+        // 验证返回结果
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertTrue(response.getBody().getSuccess());
+        Assertions.assertEquals("Product updated!", response.getBody().getMessage());
+
+
     }
 
     @Test

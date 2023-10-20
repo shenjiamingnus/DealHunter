@@ -39,7 +39,7 @@ public class UserController {
   JwtTokenUtil jwtTokenUtil;
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<JwtAuthenticationResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
     Authentication authentication = authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(
             loginRequest.getUsername(),
@@ -60,7 +60,7 @@ public class UserController {
   }
 
   @PostMapping("/signup")
-  public ResponseEntity<?> register(@Valid @RequestBody SignupRequest signupRequest){
+  public ResponseEntity<GeneralApiResponse> register(@Valid @RequestBody SignupRequest signupRequest){
     if (userService.checkUserNameExists(signupRequest.getUsername())) {
       return new ResponseEntity<>(new GeneralApiResponse(false, "Username already registered!"), HttpStatus.BAD_REQUEST);
     }
@@ -72,7 +72,7 @@ public class UserController {
   }
 
   @PutMapping("/modify/password")
-  public ResponseEntity<?> modifyPassword(@Valid @RequestBody UserPasswordModifyRequest userModifyRequest, @CurrentUser CustomUserDetails userDetails) {
+  public ResponseEntity<GeneralApiResponse> modifyPassword(@Valid @RequestBody UserPasswordModifyRequest userModifyRequest, @CurrentUser CustomUserDetails userDetails) {
     User modifyUser = userService.modifyUserPassword(userModifyRequest, userDetails);
     if (modifyUser!= null) {
       return ResponseEntity.ok(new GeneralApiResponse(true, "User Detail modified!"));
@@ -81,7 +81,7 @@ public class UserController {
   }
 
   @PutMapping("/modify/email")
-  public ResponseEntity<?> modifyEmail(@Valid @RequestBody UserEmailModifyRequest userModifyRequest, @CurrentUser CustomUserDetails userDetails) {
+  public ResponseEntity<GeneralApiResponse> modifyEmail(@Valid @RequestBody UserEmailModifyRequest userModifyRequest, @CurrentUser CustomUserDetails userDetails) {
     User modifyUser = userService.modifyUserEmail(userModifyRequest, userDetails);
     if (modifyUser!= null) {
       return ResponseEntity.ok(new GeneralApiResponse(true, "User Detail modified!"));
@@ -91,7 +91,7 @@ public class UserController {
 
   @PostMapping("/admin/create")
   @PreAuthorize("hasAuthority('ADMIN')")
-  public ResponseEntity<?> createAdmin(@Valid @RequestBody AdminCreateRequest adminCreateRequest, @CurrentUser CustomUserDetails userDetails) {
+  public ResponseEntity<GeneralApiResponse> createAdmin(@Valid @RequestBody AdminCreateRequest adminCreateRequest, @CurrentUser CustomUserDetails userDetails) {
     if (userService.checkUserNameExists(adminCreateRequest.getUsername())) {
       return new ResponseEntity<>(new GeneralApiResponse(false, "Username already registered!"), HttpStatus.BAD_REQUEST);
     }
@@ -101,18 +101,4 @@ public class UserController {
     }
     return ResponseEntity.ok(new GeneralApiResponse(false, "User register failed."));
   }
-
-  @PostMapping("/admin/test")
-  @PreAuthorize("hasAuthority('ADMIN')")
-  public ResponseEntity<?> testAdmin(@Valid @RequestBody AdminCreateRequest adminCreateRequest, @CurrentUser CustomUserDetails userDetails) {
-    if (userService.checkUserNameExists(adminCreateRequest.getUsername())) {
-      return new ResponseEntity<>(new GeneralApiResponse(false, "Username already registered!"), HttpStatus.BAD_REQUEST);
-    }
-    User createdUser = userService.createAdminUser(adminCreateRequest);
-    if (createdUser != null) {
-      return ResponseEntity.ok(new GeneralApiResponse(true, "User registered!"));
-    }
-    return ResponseEntity.ok(new GeneralApiResponse(false, "User register failed."));
-  }
-
 }
