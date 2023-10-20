@@ -102,12 +102,12 @@ public class Product {
         this.storeAddress = storeAddress;
     }
 
-    public String getDiscription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDiscription(String discription) {
-        this.description = discription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getImageUrl() {

@@ -75,7 +75,7 @@ public class ProductService {
         product.setProductname(createProductRequest.getProductname());
         product.setBrandname(createProductRequest.getBrandname());
         product.setStoreAddress(createProductRequest.getStoreAddress());
-        product.setDiscription(createProductRequest.getDescription());
+        product.setDescription(createProductRequest.getDescription());
         product.setImageUrl(createProductRequest.getImageUrl());
         product.setCurrentPrice(createProductRequest.getCurrentPrice());
         product.setLowestPrice(createProductRequest.getCurrentPrice());
@@ -95,7 +95,7 @@ public class ProductService {
         product.setProductname(updateProductRequest.getProductname());
         product.setBrandname(updateProductRequest.getBrandname());
         product.setStoreAddress(updateProductRequest.getStoreAddress());
-        product.setDiscription(updateProductRequest.getDescription());
+        product.setDescription(updateProductRequest.getDescription());
         product.setImageUrl(updateProductRequest.getImageUrl());
         product.setCurrentPrice(updateProductRequest.getCurrentPrice());
         //如现价低于最低价，更新最低价
