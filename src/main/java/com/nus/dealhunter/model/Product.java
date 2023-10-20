@@ -9,9 +9,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
+
 
 @Data
 @Entity
@@ -59,6 +61,11 @@ public class Product {
     private Set<User> watchers = new HashSet<>();
 
 
+    public Product(String productname) {
+        this.productname = productname;
+    }
+
+
     public Product(String productname, String brandname) {
         this.productname = productname;
         this.brandname = brandname;
@@ -103,6 +110,36 @@ public class Product {
         return productname;
     }
 
+    public void setProductname(String productname) {
+        this.productname = productname;
+    }
+
+    public String getStoreAddress() {
+        return storeAddress;
+    }
+
+    public void setStoreAddress(String storeAddress) {
+        this.storeAddress = storeAddress;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public void setCurrentPrice(double currentprice) {
         this.currentPrice = currentprice;
     }
@@ -118,6 +155,8 @@ public class Product {
     public double getLowestPrice() {
         return lowestPrice;
     }
+
+
 
     public void addWatcher(User user) {
         watchers.add(user);

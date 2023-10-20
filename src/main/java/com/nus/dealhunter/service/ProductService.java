@@ -1,8 +1,11 @@
 package com.nus.dealhunter.service;
 
+import com.nus.dealhunter.model.Brand;
 import com.nus.dealhunter.model.PriceHistory;
 import com.nus.dealhunter.model.Product;
 import com.nus.dealhunter.model.User;
+import com.nus.dealhunter.payload.request.CreateProductRequest;
+import com.nus.dealhunter.payload.request.UpdateProductRequest;
 import com.nus.dealhunter.repository.PriceHistoryRepository;
 import com.nus.dealhunter.repository.ProductRepository;
 import com.nus.dealhunter.repository.UserRepository;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.nus.dealhunter.exception.ProductServiceException;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -46,6 +50,7 @@ public class ProductService {
 
     }
 
+
     public List<Product> getProductByProductname(String productname) {
         try {
             return productRepository.findByProductname(productname);
@@ -53,6 +58,7 @@ public class ProductService {
             throw new ProductServiceException("Failed to retrieve product with productname: " + productname, e);
         }
     }
+
 
     public List<Product> getProductByBrandname(String brandname){
         try {
@@ -62,26 +68,44 @@ public class ProductService {
         }
     }
 
+
     //when create a product, make LowestPrice = CurrentPrice
-    public Product saveProduct(Product product) {
-        try {
-            product.setLowestPrice(product.getCurrentPrice());
-            PriceHistory newPriceHistory = new PriceHistory(product.getId(),product.getCurrentPrice(), LocalDate.now(), product);
-            if(product.getCurrentPrice() != 0){
-                product.getPriceHistoryList().add(newPriceHistory);
-            }
-            return productRepository.save(product);
-        }catch (Exception e){
-            throw new ProductServiceException("Failed to save product", e);
+    public Product createProduct(CreateProductRequest createProductRequest){
+        if (createProductRequest == null) {
+            return null;
         }
+        Product product = new Product();
+        product.setProductname(createProductRequest.getProductname());
+        product.setBrandname(createProductRequest.getBrandname());
+        product.setStoreAddress(createProductRequest.getStoreAddress());
+        product.setDescription(createProductRequest.getDescription());
+        product.setImageUrl(createProductRequest.getImageUrl());
+        product.setCurrentPrice(createProductRequest.getCurrentPrice());
+        product.setLowestPrice(createProductRequest.getCurrentPrice());
+        product.setCreateDate(Instant.now());
+        //product.setBrand(new Brand(createProductRequest.getBrand_id(),createProductRequest.getBrandname()));
+        if (createProductRequest.getBrand_id() != null && createProductRequest.getBrandname() != null) {
+            product.setBrand(new Brand(createProductRequest.getBrand_id(), createProductRequest.getBrandname()));
+        }
+        return productRepository.save(product);
     }
 
-    public Product updateProduct(Product product) {
-        try {
-            return productRepository.save(product);
-        }catch (Exception e){
-            throw new ProductServiceException("Failed to save product", e);
+    public Product updateProduct(UpdateProductRequest updateProductRequest){
+        Product product = new Product();
+        product.setId(updateProductRequest.getProduct_id());
+        product.setProductname(updateProductRequest.getProductname());
+        product.setBrandname(updateProductRequest.getBrandname());
+        product.setStoreAddress(updateProductRequest.getStoreAddress());
+        product.setDescription(updateProductRequest.getDescription());
+        product.setImageUrl(updateProductRequest.getImageUrl());
+        product.setCurrentPrice(updateProductRequest.getCurrentPrice());
+        //如现价低于最低价，更新最低价
+        if(updateProductRequest.getCurrentPrice()<updateProductRequest.getLowestPrice()){
+            product.setLowestPrice(updateProductRequest.getCurrentPrice());
         }
+        product.setCreateDate(Instant.now());
+        product.setBrand(new Brand(updateProductRequest.getBrand_id(),updateProductRequest.getBrandname()));
+        return productRepository.save(product);
     }
 
     public void deleteProduct(Long id) {

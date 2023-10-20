@@ -1,23 +1,19 @@
 package com.nus.dealhunter.controller;
 
 import com.nus.dealhunter.model.Product;
-import com.nus.dealhunter.model.User;
+import com.nus.dealhunter.payload.request.CreateProductRequest;
+import com.nus.dealhunter.payload.request.UpdateProductRequest;
 import com.nus.dealhunter.payload.response.GeneralApiResponse;
 import com.nus.dealhunter.service.ProductService;
 import com.nus.dealhunter.exception.ProductServiceException;
 import com.nus.dealhunter.model.PriceHistory;
-import com.nus.dealhunter.payload.request.*;
-import com.nus.dealhunter.payload.response.GeneralApiResponse;
-import com.nus.dealhunter.payload.response.JwtAuthenticationResponse;
-import com.nus.dealhunter.util.JwtTokenUtil;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Optional;
+
 
 
 @Api("Product/")
@@ -29,20 +25,9 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
-        if(!products.isEmpty()){
-            return ResponseEntity.ok(products);
-        }else{
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping("/productname")
-    public ResponseEntity<List<Product>> getProductByProductname(@RequestParam String productname){
-        List<Product> products = productService.getProductByProductname(productname);
         if(!products.isEmpty()){
             return ResponseEntity.ok(products);
         }else{
@@ -68,18 +53,47 @@ public class ProductController {
     }
 
     /** Product Creat, update, delete*/
+//    @PostMapping
+//    public ResponseEntity<?> createProduct(@RequestBody Product product){
+//        Product savedProduct = productService.saveProduct(product);
+//        if(savedProduct != null){
+//            return ResponseEntity.ok(new GeneralApiResponse(true,"Product created!",product));
+//        }else {
+//            return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to created"));
+//        }
+//
+//    }
+
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product){
-        Product savedProduct = productService.saveProduct(product);
-        return ResponseEntity.ok(savedProduct);
+    public ResponseEntity<GeneralApiResponse> createProduct(@RequestBody CreateProductRequest createProductRequest){
+        Product savedProduct = productService.createProduct(createProductRequest);
+        if(savedProduct != null){
+            return ResponseEntity.ok(new GeneralApiResponse(true,"Product created!"));
+        }else {
+            return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to created"));
+        }
 
     }
 
-    @PutMapping
-    public ResponseEntity<Product> updateProduct(@RequestBody Product product){
-        Product savedProduct = productService.updateProduct(product);
-        return ResponseEntity.ok(savedProduct);
+//
+//    @PutMapping
+//    public ResponseEntity<?> updateProduct(@RequestBody Product product){
+//        Product savedProduct = productService.updateProduct(product);
+//        if(savedProduct != null){
+//            return ResponseEntity.ok(new GeneralApiResponse(true,"Product updated!",product));
+//        }else {
+//            return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to updated"));
+//        }
+//    }
 
+    @PutMapping
+    public ResponseEntity<GeneralApiResponse> updateProduct(@RequestBody UpdateProductRequest updateProductRequest){
+        Product updatedProduct = productService.updateProduct(updateProductRequest);
+        if(updatedProduct != null){
+            return ResponseEntity.ok(new GeneralApiResponse(true,"Product updated!"));
+        }else {
+            return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to updated"));
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -103,6 +117,8 @@ public class ProductController {
         Product updatedProduct = productService.submitNewPrice(productId, newPrice);
         return ResponseEntity.ok(updatedProduct);
     }
+
+
 
     @PostMapping("/{productId}/addWatchers/{userId}")
     public ResponseEntity<Void> addUserWatchesProduct(@PathVariable Long userId, @PathVariable Long productId) {

@@ -2,12 +2,17 @@ package com.nus.dealhunter.service;
 
 import com.nus.dealhunter.exception.BrandServiceException;
 import com.nus.dealhunter.model.Brand;
-import com.nus.dealhunter.model.Product;
+
+import com.nus.dealhunter.payload.request.CreateBrandRequest;
+
 import com.nus.dealhunter.repository.BrandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+import java.time.Instant;
 import java.util.List;
+
 
 import java.util.Optional;
 
@@ -31,14 +36,27 @@ public class BrandService {
 
     }
 
-    public Brand saveBrand(Brand brand) {
-        try {
-            return brandRepository.save(brand);
-        }catch (Exception e){
-            throw new BrandServiceException("Failed to save brand", e);
-        }
-
+//    public Brand saveBrand(Brand brand) {
+//        try {
+//            return brandRepository.save(brand);
+//        }catch (Exception e){
+//            throw new BrandServiceException("Failed to save brand", e);
+//        }
+//
+//    }
+public Brand createBrand(CreateBrandRequest createBrandRequest){
+    if (createBrandRequest == null) {
+        return null;
     }
+    Brand brand = new Brand();
+    brand.setBrandname(createBrandRequest.getBrandname());
+    brand.setDescription(createBrandRequest.getDescription());
+    brand.setImageUrl(createBrandRequest.getImageUrl());
+    brand.setCreateDate(Instant.now());
+    return brandRepository.save(brand);
+}
+
+
 
     public void deleteBrand(Long id) {
         try {
@@ -58,6 +76,7 @@ public class BrandService {
     }
 
 
+
     public Brand save(Brand brand){
        return brandRepository.save(brand);
     }
@@ -65,6 +84,7 @@ public class BrandService {
     public  void delete(Long id){
         brandRepository.deleteById(id);
     }
+
 
     public Optional<Brand> findById(Long id){
         return brandRepository.findById(id);
