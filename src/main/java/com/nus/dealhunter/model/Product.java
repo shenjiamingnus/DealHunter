@@ -105,36 +105,18 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-
-    public String getProductname() {
-        return productname;
-    }
-
     public void setProductname(String productname) {
         this.productname = productname;
-    }
-
-    public String getStoreAddress() {
-        return storeAddress;
     }
 
     public void setStoreAddress(String storeAddress) {
         this.storeAddress = storeAddress;
     }
 
-    public String getDescription() {
-        return description;
-    }
 
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
