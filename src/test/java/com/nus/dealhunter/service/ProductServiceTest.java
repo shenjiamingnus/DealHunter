@@ -345,7 +345,7 @@ class ProductServiceTest {
         // 模拟JavaMailSender发送邮件
         Mockito.doNothing().when(javaMailSender).send(any(SimpleMailMessage.class));
 
-        // 调用被测试的方法
+        // 调用被测试方法
         productService.sendLowestPriceUpdateEmails(product, 9.99);
 
         // 验证JavaMailSender是否成功发送了模拟电子邮件消息

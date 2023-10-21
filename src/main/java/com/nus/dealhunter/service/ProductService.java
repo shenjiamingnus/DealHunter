@@ -233,9 +233,9 @@ public class ProductService {
                 User user = optionalUser.get();
                 Product product = optionalProduct.get();
 
-                // 添加用户到产品的关注列表
-                product.addWatcher(user);
-                productRepository.save(product);
+                // 添加产品到用户的关注列表
+                user.addWatchedProduct(product);
+                userRepository.save(user);
             } else {
                 // 处理用户或产品不存在的情况
                 throw new ProductServiceException("User or Product not found");
@@ -254,9 +254,13 @@ public class ProductService {
                 User user = optionalUser.get();
                 Product product = optionalProduct.get();
 
-                // 从产品的关注列表中移除用户
-                product.removeWatcher(user);
-                productRepository.save(product);
+//                // 从产品的关注列表中移除用户
+//                product.removeWatcher(user);
+//                productRepository.save(product);
+
+                user.removeWatchedProduct(product);
+                userRepository.save(user);
+
             } else {
                 throw new ProductServiceException("User or Product not found");
             }
@@ -274,7 +278,7 @@ public class ProductService {
             Product product = optionalProduct.get();
 
             // 检查用户是否在产品的关注列表中
-            return product.getWatchers().contains(user);
+            return user.getWatchedProducts().contains(product);
         } else {
             throw new ProductServiceException("User or Product not found");
         }
@@ -283,7 +287,7 @@ public class ProductService {
     //发送价格更新邮件给关注了产品的用户
     public void sendLowestPriceUpdateEmails(Product product, double newLowestPrice) {
         // 获取关注了该产品的用户列表
-        Set<User> watchers = product.getWatchers();
+        Set<User> watchers = productRepository.findUsersWatchingProduct(product);
 
         for (User user : watchers) {
             // 创建邮件内容
