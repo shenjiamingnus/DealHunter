@@ -20,6 +20,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
 
 import java.time.LocalDate;
@@ -42,6 +44,9 @@ class ProductServiceTest {
     UserRepository userRepository;
     @InjectMocks
     ProductService productService;
+
+    @Mock
+    private JavaMailSender javaMailSender;
 
 //    @BeforeEach
 //    void setUp() {
@@ -308,7 +313,44 @@ class ProductServiceTest {
         Assertions.assertTrue(isWatching);
     }
 
+    @Test
+    public void testSendLowestPriceUpdateEmails() {
 
+//        javaMailSender = Mockito.mock(JavaMailSender.class);
+//        productService = new ProductService();
+//        productService.setJavaMailSender(javaMailSender);
+
+        // 创建一个模拟产品
+        Product product = new Product();
+        product.setProductname("TestProduct");
+
+        // 创建一个模拟用户列表
+        Set<User> watchers = new HashSet<>();
+        User user1 = new User();
+        user1.setEmail("user1@example.com");
+        watchers.add(user1);
+
+        User user2 = new User();
+        user2.setEmail("user2@example.com");
+        watchers.add(user2);
+
+        product.setWatchers(watchers);
+
+        // 创建模拟电子邮件消息
+        SimpleMailMessage expectedMessage = new SimpleMailMessage();
+        expectedMessage.setTo("user1@example.com");
+        expectedMessage.setSubject("LowestPrice Update for TestProduct");
+        expectedMessage.setText("The newLowestPrice for TestProduct has been updated to 9.99");
+
+        // 模拟JavaMailSender发送邮件
+        Mockito.doNothing().when(javaMailSender).send(any(SimpleMailMessage.class));
+
+        // 调用被测试的方法
+        productService.sendLowestPriceUpdateEmails(product, 9.99);
+
+        // 验证JavaMailSender是否成功发送了模拟电子邮件消息
+        Mockito.verify(javaMailSender).send(expectedMessage);
+    }
 
 
 }
