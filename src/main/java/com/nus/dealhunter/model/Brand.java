@@ -39,7 +39,6 @@ public class Brand {
     @JsonIgnore
     private List<Product> products;
 
-
     public Brand(String brandname) {
         this.brandname = brandname;
     }
@@ -49,13 +48,16 @@ public class Brand {
         this.brandname = brandname;
     }
 
+
     public Brand(String brandname, String description, Long id) {
         this.brandname = brandname;
         this.id = id;
         this.description = description;
     }
 
-    public Brand() {}
+    public Brand(){
+
+    }
 
     public String getBrandname() {
         return brandname;

@@ -35,7 +35,7 @@ public class BrandController {
         if(savedBrand != null){
             return ResponseEntity.ok(new GeneralApiResponse(true,"Brand created!"));
         }else {
-            return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to created"));
+            return ResponseEntity.ok(new GeneralApiResponse(false,"Brand failed to created"));
         }
 
     }
