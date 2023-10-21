@@ -39,6 +39,7 @@ public class PriceHistoryService {
         if (createPriceHistoryRequest == null) {
             return null;
         }
+
         PriceHistory priceHistory = new PriceHistory();
         priceHistory.setPrice(createPriceHistoryRequest.getPrice());
         priceHistory.setCreateDate(Instant.now());

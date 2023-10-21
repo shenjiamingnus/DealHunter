@@ -38,7 +38,7 @@ public class PriceHistoryController {
     JwtTokenUtil jwtTokenUtil;
 
 
-    @PostMapping("/create")
+    @PostMapping("/price-history/create")
     public ResponseEntity<GeneralApiResponse> createPriceHistory(@RequestBody CreatePriceHistoryRequest createPriceHistoryRequest) {
         PriceHistory savedPriceHistory = priceHistoryService.createPriceHistory(createPriceHistoryRequest);
         if(savedPriceHistory != null){
@@ -48,19 +48,19 @@ public class PriceHistoryController {
         }
     }
 
-    @DeleteMapping("/remove/{priceHistoryId}")
+    @DeleteMapping("/price-history/remove/{priceHistoryId}")
     public ResponseEntity<Void> removePriceHistory(@PathVariable Long priceHistoryId) {
         priceHistoryService.deletePriceHistory(priceHistoryId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/product/{productId}")
+    @GetMapping("/price-history/product/{productId}")
     public ResponseEntity<List<PriceHistory>> getPriceHistoryByProductId(@PathVariable Long productId) {
         List<PriceHistory> priceHistoryList = priceHistoryService.getPriceHistoryByProductId(productId);
         return new ResponseEntity<>(priceHistoryList, HttpStatus.OK);
     }
 
-    @PostMapping("/product/{productId}/add")
+    @PostMapping("/price-history/product/{productId}/add")
     public ResponseEntity<PriceHistory> addPriceHistoryToProduct(
             @PathVariable Long productId,
             @RequestBody CreatePriceHistoryRequest createPriceHistoryRequest) {
@@ -74,7 +74,7 @@ public class PriceHistoryController {
         }
     }
 
-    @GetMapping("/{Id}/price-history")
+    @GetMapping("/price-history/{Id}")
     public ResponseEntity<List<PriceHistory>> viewHistoricalPriceTrends(
             @PathVariable Long Id,
             @RequestParam Instant startDate,
