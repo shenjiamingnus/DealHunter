@@ -97,6 +97,8 @@ public class ProductService {
         //如现价低于最低价，更新最低价
         if(updateProductRequest.getCurrentPrice()<updateProductRequest.getLowestPrice()){
             product.setLowestPrice(updateProductRequest.getCurrentPrice());
+        }else {
+            product.setLowestPrice(updateProductRequest.getLowestPrice());
         }
         product.setCreateDate(Instant.now());
         product.setBrand(new Brand(updateProductRequest.getBrand_id(),updateProductRequest.getBrandname()));

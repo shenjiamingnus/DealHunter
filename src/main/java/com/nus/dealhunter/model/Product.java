@@ -75,11 +75,11 @@ public class Product {
         this.storeAddress = storeAddress;
     }
 
-    public Product(String productname, String brandname, String storeAddress, String discription) {
+    public Product(String productname, String brandname, String storeAddress, String description) {
         this.productname = productname;
         this.brandname = brandname;
         this.storeAddress = storeAddress;
-        this.description = discription;
+        this.description = description;
     }
 
 

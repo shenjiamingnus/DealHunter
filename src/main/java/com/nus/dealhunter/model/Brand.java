@@ -25,7 +25,7 @@ public class Brand {
     @Size(max = 50)
     private String brandname;
 
-    private String discription;
+    private String description;
 
     @CreatedDate
     private Instant createDate;

@@ -116,7 +116,7 @@ class ProductControllerTest{
     @Test
     void testUpdateProduct() {
         // 模拟 ProductService 的行为
-        UpdateProductRequest updateProductRequest = new UpdateProductRequest(1L,"Product 1", "Brand 1", "Store 1", "Description 1", "https://example.com", 19.99, 1L);
+        UpdateProductRequest updateProductRequest = new UpdateProductRequest(1L,"Product 1", "Brand 1", "Store 1", "Description 1", "https://example.com", 19.99, 20.20,1L);
         when(productService.updateProduct(updateProductRequest)).thenReturn(new Product());
 
         // 调用控制器方法
