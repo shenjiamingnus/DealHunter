@@ -34,6 +34,7 @@ public class UpdateProductRequest {
     @NotBlank
     private Long brand_id;
 
+    /** this is for unit test*/
     public UpdateProductRequest(long product_id,String productname, String brandname, String storeAddress, String description, String imageUrl, double currentPrice, double lowestPrice, long  brand_id) {
         this.product_id=product_id;
         this.productname=productname;

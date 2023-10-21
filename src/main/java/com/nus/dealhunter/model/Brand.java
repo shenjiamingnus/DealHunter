@@ -39,11 +39,13 @@ public class Brand {
     @JsonIgnore
     private List<Product> products;
 
+    public Brand (){};
 
     public Brand(String brandname) {
         this.brandname = brandname;
 
     }
+
 
     public Brand(String brandname, String description, Long id) {
         this.brandname = brandname;

@@ -31,6 +31,7 @@ public class CreateProductRequest {
     private Long brand_id;
 
 
+    /** this is for unit test*/
     public CreateProductRequest(String productname, String brandname, String storeAddress, String description, String imageUrl, double currentPrice, long brand_id) {
         this.productname=productname;
         this.brandname=brandname;

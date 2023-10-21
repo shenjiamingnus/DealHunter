@@ -20,7 +20,9 @@ public class CreateBrandRequest {
     @NotBlank
     private Long id;
 
-    public CreateBrandRequest(String brandname, String storeAddress, String description, String imageUrl, Long id){
-
+    public CreateBrandRequest(String brandname, String description, String imageUrl){
+        this.brandname= brandname;
+        this.description =description;
+        this.imageUrl = imageUrl;
     }
 }
