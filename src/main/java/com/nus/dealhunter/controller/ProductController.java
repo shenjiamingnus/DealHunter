@@ -37,15 +37,6 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/productname")
-    public ResponseEntity<List<Product>> getProductByProductname(@RequestParam String productname){
-        List<Product> products = productService.getProductByProductname(productname);
-        if(!products.isEmpty()){
-            return ResponseEntity.ok(products);
-        }else{
-            return ResponseEntity.notFound().build();
-        }
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id){
