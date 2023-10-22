@@ -1,5 +1,6 @@
 package com.nus.dealhunter.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -46,6 +47,7 @@ public class User {
           joinColumns = @JoinColumn(name = "user_id"),
           inverseJoinColumns = @JoinColumn(name = "product_id")
   )
+  @JsonIgnore
   private Set<Product> watchedProducts;
 
   public void addWatchedProduct(Product product) {

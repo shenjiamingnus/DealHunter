@@ -142,7 +142,9 @@ public class ProductService {
             if (optionalProduct.isPresent()) {
                 Product product = optionalProduct.get();
                 priceHistory.setProduct(product);                       // 关联到商品
+                //这个没问题,save了history
                 PriceHistory savedPriceHistory = priceHistoryRepository.save(priceHistory);
+                //应该更新current price,和lowest price
                 product.getPriceHistoryList().add(savedPriceHistory);   // 添加到商品的价格历史记录列表
                 productRepository.save(product);                        // 更新商品对象，以保存关联的价格历史记录
                 return savedPriceHistory;
@@ -189,16 +191,16 @@ public class ProductService {
                     product.setLowestPrice(newPrice);
                 }
 
-                List<PriceHistory> priceHistoryList = product.getPriceHistoryList();
-                if (priceHistoryList == null) {
-                    priceHistoryList = new ArrayList<>();
-                }
+//                List<PriceHistory> priceHistoryList = product.getPriceHistoryList();
+//                if (priceHistoryList == null) {
+//                    priceHistoryList = new ArrayList<>();
+//                }
 
                 // 创建新的价格历史记录对象
-                PriceHistory newPriceHistory = new PriceHistory(product.getId(),newPrice, product.getCreateDate(), product);
+                PriceHistory newPriceHistory = new PriceHistory(newPrice, Instant.now(), product);
 
-                // 将新的价格历史记录添加到历史价格列表中
-                priceHistoryList.add(newPriceHistory);
+//                //不需要 将新的价格历史记录添加到历史价格列表中
+//                priceHistoryList.add(newPriceHistory);
 
                 // 保存新的价格历史记录到数据库
                 priceHistoryRepository.save(newPriceHistory);

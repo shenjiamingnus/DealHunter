@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
@@ -58,6 +59,7 @@ public class Product {
     private List<PriceHistory> priceHistoryList = new ArrayList<>();
 
     @ManyToMany(mappedBy = "watchedProducts")
+    @JsonIgnore
     private Set<User> watchers = new HashSet<>();
 
 
@@ -103,6 +105,10 @@ public class Product {
         this.storeAddress = storeAddress;
         this.description = description;
         this.imageUrl = imageUrl;
+    }
+
+    public Product(Long productId) {
+        this.id =productId;
     }
 
     public void setProductname(String productname) {
