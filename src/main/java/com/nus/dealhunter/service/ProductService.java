@@ -142,9 +142,7 @@ public class ProductService {
             if (optionalProduct.isPresent()) {
                 Product product = optionalProduct.get();
                 priceHistory.setProduct(product);                       // 关联到商品
-                //这个没问题,save了history
                 PriceHistory savedPriceHistory = priceHistoryRepository.save(priceHistory);
-                //应该更新current price,和lowest price
                 product.getPriceHistoryList().add(savedPriceHistory);   // 添加到商品的价格历史记录列表
                 productRepository.save(product);                        // 更新商品对象，以保存关联的价格历史记录
                 return savedPriceHistory;

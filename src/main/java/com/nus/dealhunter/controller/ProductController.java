@@ -97,9 +97,9 @@ public class ProductController {
     }
 
     //获取产品的价格历史记录
-    @GetMapping("/getProductPriceHistory/{id}")
-    public ResponseEntity<List<PriceHistory>> getProductPriceHistory(@PathVariable Long id) {
-        List<PriceHistory> priceHistoryList = productService.getProductPriceHistory(id);
+    @GetMapping("/getProductPriceHistory/{productId}")
+    public ResponseEntity<List<PriceHistory>> getProductPriceHistory(@PathVariable Long productId) {
+        List<PriceHistory> priceHistoryList = productService.getProductPriceHistory(productId);
         return ResponseEntity.ok(priceHistoryList);
     }
 
