@@ -46,13 +46,6 @@ public class PriceHistory {
         this.product = product;
     }
 
-    public Instant getPriceHistoryDate() {
-        return createDate;
-    }
-
-    public double getPriceFromPriceHistory() {
-        return price;
-    }
 
     public PriceHistory() {
     }

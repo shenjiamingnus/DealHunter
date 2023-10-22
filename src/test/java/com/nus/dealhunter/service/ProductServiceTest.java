@@ -130,7 +130,7 @@ class ProductServiceTest {
         // Arrange
         List<Product> productList = Arrays.asList(new Product(), new Product());
         String productname = "TestProduct";
-        Mockito.when(productRepository.findByProductname(productname)).thenReturn(productList);
+        Mockito.when(productRepository.findByProductnameContaining(productname)).thenReturn(productList);
 
         // Act
         List<Product> result = productService.getProductByProductname(productname);

@@ -53,7 +53,7 @@ public class ProductService {
 
     public List<Product> getProductByProductname(String productname) {
         try {
-            return productRepository.findByProductname(productname);
+            return productRepository.findByProductnameContaining(productname);
         }catch (Exception e){
             throw new ProductServiceException("Failed to retrieve product with productname: " + productname, e);
         }
