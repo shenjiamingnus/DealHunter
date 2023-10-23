@@ -1,5 +1,6 @@
 package com.nus.dealhunter.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -39,6 +40,25 @@ public class User {
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
+
+  @ManyToMany
+  @JoinTable(
+          name = "user_watched_products",
+          joinColumns = @JoinColumn(name = "user_id"),
+          inverseJoinColumns = @JoinColumn(name = "product_id")
+  )
+  @JsonIgnore
+  private Set<Product> watchedProducts;
+
+  public void addWatchedProduct(Product product) {
+    watchedProducts.add(product);
+    product.addWatcher(this);
+  }
+
+  public void removeWatchedProduct(Product product) {
+    watchedProducts.remove(product);
+    product.removeWatcher(this);
+  }
 
 
   public User(String username, String password) {

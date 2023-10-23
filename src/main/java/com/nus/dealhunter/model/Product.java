@@ -2,14 +2,19 @@ package com.nus.dealhunter.model;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
+
 
 @Data
 @Entity
@@ -48,75 +53,80 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "brand_id")
-    private  Brand brand;
+    private Brand brand;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PriceHistory> priceHistoryList = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "watchedProducts")
+    @JsonIgnore
+    private Set<User> watchers = new HashSet<>();
+
+
     public Product(String productname) {
         this.productname = productname;
     }
+
 
     public Product(String productname, String brandname) {
         this.productname = productname;
         this.brandname = brandname;
     }
 
-    public Product(Long id, String productname, double currentPrice ) {
+    public Product(Long id, String productname, String brandname,double currentPrice) {
         this.id = id;
         this.productname = productname;
+        this.brandname = brandname;
         this.currentPrice = currentPrice;
-        this .lowestPrice = currentPrice;
+        this.lowestPrice = currentPrice;
     }
 
-    public Product(String productname, String brandname, String storeAddress) {
+    public Product(String productname, String brandname,double currentPrice ) {
         this.productname = productname;
         this.brandname = brandname;
-        this.storeAddress = storeAddress;
+        this.currentPrice = currentPrice;
+        this.lowestPrice = currentPrice;
     }
 
-    public Product(String productname, String brandname, String storeAddress, String discription) {
+    public Product(String productname, String brandname, double currentPrice,String storeAddress, String description) {
         this.productname = productname;
         this.brandname = brandname;
+        this.currentPrice = currentPrice;
+        this.lowestPrice = currentPrice;
         this.storeAddress = storeAddress;
-        this.description = discription;
+        this.description = description;
     }
 
+    public Product(String productname, String brandname, double currentPrice, String storeAddress, String description, String imageUrl) {
+        this.productname = productname;
+        this.brandname = brandname;
+        this.currentPrice = currentPrice;
+        this.lowestPrice = currentPrice;
+        this.storeAddress = storeAddress;
+        this.description = description;
+        this.imageUrl = imageUrl;
+    }
 
-
-    public String getProductname() {
-        return productname;
+    public Product(Long productId) {
+        this.id =productId;
     }
 
     public void setProductname(String productname) {
         this.productname = productname;
     }
 
-    public String getStoreAddress() {
-        return storeAddress;
-    }
-
     public void setStoreAddress(String storeAddress) {
         this.storeAddress = storeAddress;
     }
 
-    public String getDiscription() {
-        return description;
-    }
 
-    public void setDiscription(String discription) {
-        this.description = discription;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-
-
 
     public void setCurrentPrice(double currentprice) {
         this.currentPrice = currentprice;
@@ -126,14 +136,22 @@ public class Product {
         return currentPrice;
     }
 
-
-
     public void setLowestPrice(double lowestPrice) {
         this.lowestPrice = lowestPrice;
     }
 
     public double getLowestPrice() {
         return lowestPrice;
+    }
+
+
+
+    public void addWatcher(User user) {
+        watchers.add(user);
+    }
+
+    public void removeWatcher(User user) {
+        watchers.remove(user);
     }
 
 

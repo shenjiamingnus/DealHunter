@@ -11,6 +11,8 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -35,16 +37,6 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/productname")
-    public ResponseEntity<List<Product>> getProductByProductname(@RequestParam String productname){
-        List<Product> products = productService.getProductByProductname(productname);
-        if(!products.isEmpty()){
-            return ResponseEntity.ok(products);
-        }else{
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id){
         return productService.getProductById(id)
@@ -62,17 +54,18 @@ public class ProductController {
         }
     }
 
-    /** Product Creat, update, delete*/
-//    @PostMapping
-//    public ResponseEntity<?> createProduct(@RequestBody Product product){
-//        Product savedProduct = productService.saveProduct(product);
-//        if(savedProduct != null){
-//            return ResponseEntity.ok(new GeneralApiResponse(true,"Product created!",product));
-//        }else {
-//            return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to created"));
-//        }
-//
-//    }
+    @GetMapping("/productname")
+    public ResponseEntity<List<Product>> getProductByProductname(@RequestParam String productname){
+        List<Product> products = productService.getProductByProductname(productname);
+        if(!products.isEmpty()){
+            return ResponseEntity.ok(products);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
 
     @PostMapping
     public ResponseEntity<GeneralApiResponse> createProduct(@RequestBody CreateProductRequest createProductRequest){
@@ -82,19 +75,9 @@ public class ProductController {
         }else {
             return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to created"));
         }
-
     }
 
-//
-//    @PutMapping
-//    public ResponseEntity<?> updateProduct(@RequestBody Product product){
-//        Product savedProduct = productService.updateProduct(product);
-//        if(savedProduct != null){
-//            return ResponseEntity.ok(new GeneralApiResponse(true,"Product updated!",product));
-//        }else {
-//            return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to updated"));
-//        }
-//    }
+
 
     @PutMapping
     public ResponseEntity<GeneralApiResponse> updateProduct(@RequestBody UpdateProductRequest updateProductRequest){
@@ -107,35 +90,47 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id){
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
 
-
-
     //获取产品的价格历史记录
-    @GetMapping("/getPriceHistory")
-    public ResponseEntity<List<PriceHistory>> getPriceHistory(@RequestParam String productname,
-                                                              @RequestParam String brandname) {
-        List<PriceHistory> priceHistoryList = productService.getProductPriceHistory(productname, brandname);
+    @GetMapping("/getProductPriceHistory/{productId}")
+    public ResponseEntity<List<PriceHistory>> getProductPriceHistory(@PathVariable Long productId) {
+        List<PriceHistory> priceHistoryList = productService.getProductPriceHistory(productId);
         return ResponseEntity.ok(priceHistoryList);
-
     }
 
-    @PostMapping("/submitNewPrice")
+    @PostMapping("/{productId}/submit-price")
     public ResponseEntity<Product> submitNewPrice(
-            @RequestParam String productname,
-            @RequestParam String brandname,
-            @RequestParam double newPrice) {
-        try {
-            Product updatedProduct = productService.submitNewPrice(productname, brandname, newPrice);
-            return ResponseEntity.ok(updatedProduct);
-        } catch (ProductServiceException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+            @PathVariable Long productId,
+            @RequestParam double newPrice
+    ) {
+        Product updatedProduct = productService.submitNewPrice(productId, newPrice);
+        return ResponseEntity.ok(updatedProduct);
     }
 
+
+
+    @PostMapping("/{productId}/addWatchers/{userId}")
+    public ResponseEntity<Void> addUserWatchesProduct(@PathVariable Long userId, @PathVariable Long productId) {
+        productService.addUserWatchesProduct(userId, productId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{productId}/deleteWatchers/{userId}")
+    public ResponseEntity<Void> removeUserWatchesProduct(@PathVariable Long userId, @PathVariable Long productId) {
+        productService.removeUserWatchesProduct(userId, productId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{productId}/checkWatchers/{userId}")
+    public ResponseEntity<Boolean> isUserWatchingProduct(@PathVariable Long userId, @PathVariable Long productId) {
+        boolean isWatching = productService.isUserWatchingProduct(userId, productId);
+        return new ResponseEntity<>(isWatching, HttpStatus.OK);
+    }
 
 
 }

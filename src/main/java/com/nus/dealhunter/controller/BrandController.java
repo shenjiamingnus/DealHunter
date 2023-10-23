@@ -1,6 +1,8 @@
 package com.nus.dealhunter.controller;
 import com.nus.dealhunter.model.Brand;
 import com.nus.dealhunter.model.Product;
+import com.nus.dealhunter.payload.request.CreateBrandRequest;
+import com.nus.dealhunter.payload.response.GeneralApiResponse;
 import com.nus.dealhunter.service.BrandService;
 import com.nus.dealhunter.util.JwtTokenUtil;
 import io.swagger.annotations.Api;
@@ -28,11 +30,16 @@ public class BrandController {
     }
 
     @PostMapping
-    public ResponseEntity<Brand> createBrand(@RequestBody Brand brand){
-        Brand savedBrand = brandService.saveBrand(brand);
-        return ResponseEntity.ok(savedBrand);
+    public ResponseEntity<GeneralApiResponse> createBrand(@RequestBody CreateBrandRequest createBrandRequest){
+        Brand savedBrand = brandService.createBrand(createBrandRequest);
+        if(savedBrand != null){
+            return ResponseEntity.ok(new GeneralApiResponse(true,"Brand created!"));
+        }else {
+            return ResponseEntity.ok(new GeneralApiResponse(false,"Brand failed to created"));
+        }
 
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBrand(@PathVariable Long id){
