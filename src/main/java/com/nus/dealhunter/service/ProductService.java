@@ -59,7 +59,7 @@ public class ProductService {
 
     public List<Product> getProductByProductname(String productname) {
         try {
-            return productRepository.findByProductname(productname);
+            return productRepository.findByProductnameContaining(productname);
         }catch (Exception e){
             throw new ProductServiceException("Failed to retrieve product with productname: " + productname, e);
         }
@@ -204,12 +204,11 @@ public class ProductService {
 //                }
 
                 // 创建新的价格历史记录对象
-                PriceHistory newPriceHistory = new PriceHistory(product.getId(),newPrice, Instant.now(), product);
+                PriceHistory newPriceHistory = new PriceHistory(newPrice, Instant.now(), product);
 
-//                // 将新的价格历史记录添加到历史价格列表中
+//                //不需要 将新的价格历史记录添加到历史价格列表中
 //                priceHistoryList.add(newPriceHistory);
 
-                addPriceHistoryToProduct(product.getId(),newPriceHistory);
 
                 // 保存新的价格历史记录到数据库
                 priceHistoryRepository.save(newPriceHistory);
@@ -286,6 +285,7 @@ public class ProductService {
 
     //发送价格更新邮件给关注了产品的用户
     public void sendLowestPriceUpdateEmails(Product product, double newLowestPrice) {
+
         // 获取关注了该产品的用户列表
         Set<User> watchers = productRepository.findUsersWatchingProduct(product);
 

@@ -43,6 +43,7 @@ public class PriceHistoryService {
         PriceHistory priceHistory = new PriceHistory();
         priceHistory.setPrice(createPriceHistoryRequest.getPrice());
         priceHistory.setCreateDate(Instant.now());
+        priceHistory.setProduct(new Product(createPriceHistoryRequest.getProduct_id()));
 
         return priceHistoryRepository.save(priceHistory);
     }

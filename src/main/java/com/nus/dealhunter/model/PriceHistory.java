@@ -40,13 +40,12 @@ public class PriceHistory {
         this.product = product;
     }
 
-    public Instant getPriceHistoryDate() {
-        return createDate;
+    public PriceHistory(double price, Instant createDate,Product product) {
+        this.price = price;
+        this.createDate = createDate;
+        this.product = product;
     }
 
-    public double getPriceFromPriceHistory() {
-        return price;
-    }
 
     public PriceHistory() {
     }

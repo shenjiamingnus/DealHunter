@@ -54,17 +54,18 @@ public class ProductController {
         }
     }
 
-    /** Product Creat, update, delete*/
-//    @PostMapping
-//    public ResponseEntity<?> createProduct(@RequestBody Product product){
-//        Product savedProduct = productService.saveProduct(product);
-//        if(savedProduct != null){
-//            return ResponseEntity.ok(new GeneralApiResponse(true,"Product created!",product));
-//        }else {
-//            return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to created"));
-//        }
-//
-//    }
+    @GetMapping("/productname")
+    public ResponseEntity<List<Product>> getProductByProductname(@RequestParam String productname){
+        List<Product> products = productService.getProductByProductname(productname);
+        if(!products.isEmpty()){
+            return ResponseEntity.ok(products);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
 
     @PostMapping
     public ResponseEntity<GeneralApiResponse> createProduct(@RequestBody CreateProductRequest createProductRequest){
@@ -76,16 +77,7 @@ public class ProductController {
         }
     }
 
-//
-//    @PutMapping
-//    public ResponseEntity<?> updateProduct(@RequestBody Product product){
-//        Product savedProduct = productService.updateProduct(product);
-//        if(savedProduct != null){
-//            return ResponseEntity.ok(new GeneralApiResponse(true,"Product updated!",product));
-//        }else {
-//            return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to updated"));
-//        }
-//    }
+
 
     @PutMapping
     public ResponseEntity<GeneralApiResponse> updateProduct(@RequestBody UpdateProductRequest updateProductRequest){
@@ -105,9 +97,9 @@ public class ProductController {
     }
 
     //获取产品的价格历史记录
-    @GetMapping("/getProductPriceHistory")
-    public ResponseEntity<List<PriceHistory>> getProductPriceHistory(@PathVariable Long id) {
-        List<PriceHistory> priceHistoryList = productService.getProductPriceHistory(id);
+    @GetMapping("/getProductPriceHistory/{productId}")
+    public ResponseEntity<List<PriceHistory>> getProductPriceHistory(@PathVariable Long productId) {
+        List<PriceHistory> priceHistoryList = productService.getProductPriceHistory(productId);
         return ResponseEntity.ok(priceHistoryList);
     }
 
