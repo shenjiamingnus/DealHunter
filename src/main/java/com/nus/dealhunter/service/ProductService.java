@@ -292,6 +292,7 @@ public class ProductService {
         for (User user : watchers) {
             // 创建邮件内容
             SimpleMailMessage message = new SimpleMailMessage();
+//            message.setFrom("619176497@qq.com");
             message.setTo(user.getEmail());
             message.setSubject("LowestPrice Update for " + product.getProductname());
             message.setText("The newLowestPrice for " + product.getProductname() + " has been updated to " + newLowestPrice);
