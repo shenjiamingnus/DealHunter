@@ -24,7 +24,7 @@ public class ImgController {
   public ImgService imgService;
 
   @PostMapping("/upload")
-  public ResponseEntity<?> uploadAvatar(@RequestParam MultipartFile file, @CurrentUser CustomUserDetails userDetails) throws IOException {
+  public ResponseEntity<?> uploadImg(@RequestParam MultipartFile file) throws IOException {
     String address = imgService.uploadImage(file);
     if (address != null) {
       return ResponseEntity.ok(new GeneralApiResponse(true, "Upload Successfully!", address));
