@@ -37,14 +37,7 @@ public class BrandService {
 
     }
 
-//    public Brand saveBrand(Brand brand) {
-//        try {
-//            return brandRepository.save(brand);
-//        }catch (Exception e){
-//            throw new BrandServiceException("Failed to save brand", e);
-//        }
-//
-//    }
+
 public Brand createBrand(CreateBrandRequest createBrandRequest){
     if (createBrandRequest == null) {
         return null;
