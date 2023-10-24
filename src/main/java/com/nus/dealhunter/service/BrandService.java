@@ -5,6 +5,7 @@ import com.nus.dealhunter.model.Brand;
 
 import com.nus.dealhunter.payload.request.CreateBrandRequest;
 
+import com.nus.dealhunter.payload.request.ModifyBrandRequest;
 import com.nus.dealhunter.repository.BrandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,14 @@ public Brand createBrand(CreateBrandRequest createBrandRequest){
     brand.setImageUrl(createBrandRequest.getImageUrl());
     brand.setCreateDate(Instant.now());
     return brandRepository.save(brand);
+}
+
+public  Brand modifyBrand(ModifyBrandRequest modifyBrandRequest){
+        Brand brand = new Brand();
+        brand.setBrandname(modifyBrandRequest.getBrandname());
+        brand.setDescription(modifyBrandRequest.getDescription());
+        brand.setCreateDate(Instant.now());
+        return brandRepository.save(brand);
 }
 
 
