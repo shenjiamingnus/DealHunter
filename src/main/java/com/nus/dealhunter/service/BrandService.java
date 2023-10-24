@@ -59,6 +59,7 @@ public Brand createBrand(CreateBrandRequest createBrandRequest){
 
 public  Brand modifyBrand(ModifyBrandRequest modifyBrandRequest){
         Brand brand = new Brand();
+        brand.setId(modifyBrandRequest.getId());
         brand.setBrandname(modifyBrandRequest.getBrandname());
         brand.setDescription(modifyBrandRequest.getDescription());
         brand.setCreateDate(Instant.now());
