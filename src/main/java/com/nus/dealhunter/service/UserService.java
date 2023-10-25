@@ -61,11 +61,12 @@ public class UserService {
   public User createAdminUser(AdminCreateRequest adminCreateRequest) {
     User user = new User(adminCreateRequest.getUsername(), adminCreateRequest.getPassword());
     user.setPassword(passwordEncoder.encode(user.getPassword()));
+    user.setEmail(adminCreateRequest.getEmail());
     user.setCreateDate(Instant.now());
     Role userRole = roleRepository.findByName(RoleName.USER)
         .orElseThrow(() -> new CommonException("User Role not set."));
     Role adminRole = roleRepository.findByName(RoleName.ADMIN)
-        .orElseThrow(() -> new CommonException("User Role not set."));
+        .orElseThrow(() -> new CommonException("Admin Role not set."));
     Set<Role> roleSet = new HashSet<>();
     roleSet.add(userRole);
     roleSet.add(adminRole);
