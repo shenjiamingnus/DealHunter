@@ -55,9 +55,7 @@ public class Brand {
         this.description = description;
     }
 
-    public Brand(){
-
-    }
+    public Brand(){}
 
     public String getBrandname() {
         return brandname;

@@ -11,10 +11,13 @@ import com.nus.dealhunter.repository.ProductRepository;
 import com.nus.dealhunter.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.nus.dealhunter.exception.ProductServiceException;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -28,6 +31,9 @@ public class ProductService {
 
     @Autowired
     private PriceHistoryRepository priceHistoryRepository;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     public Boolean checkProductNameExists(String productname) {
         return productRepository.existsByProductname(productname);
@@ -102,11 +108,13 @@ public class ProductService {
         //如现价低于最低价，更新最低价
         if(updateProductRequest.getCurrentPrice()<updateProductRequest.getLowestPrice()){
             product.setLowestPrice(updateProductRequest.getCurrentPrice());
+            sendLowestPriceUpdateEmails(product, updateProductRequest.getLowestPrice());
         }else {
             product.setLowestPrice(updateProductRequest.getLowestPrice());
         }
         product.setCreateDate(Instant.now());
         product.setBrand(new Brand(updateProductRequest.getBrand_id(),updateProductRequest.getBrandname()));
+
         return productRepository.save(product);
     }
 
@@ -184,9 +192,10 @@ public class ProductService {
                 // 更新当前价格
                 product.setCurrentPrice(newPrice);
 
-                // 如果新价格低于历史最低价或历史最低价为0，更新历史最低价
+                // 如果新价格低于历史最低价或历史最低价为0，更新历史最低价，并发送邮件
                 if (newPrice < product.getLowestPrice() || product.getLowestPrice() == 0) {
                     product.setLowestPrice(newPrice);
+                    sendLowestPriceUpdateEmails(product, product.getLowestPrice());
                 }
 
 //                List<PriceHistory> priceHistoryList = product.getPriceHistoryList();
@@ -199,6 +208,7 @@ public class ProductService {
 
 //                //不需要 将新的价格历史记录添加到历史价格列表中
 //                priceHistoryList.add(newPriceHistory);
+
 
                 // 保存新的价格历史记录到数据库
                 priceHistoryRepository.save(newPriceHistory);
@@ -222,9 +232,9 @@ public class ProductService {
                 User user = optionalUser.get();
                 Product product = optionalProduct.get();
 
-                // 添加用户到产品的关注列表
-                product.addWatcher(user);
-                productRepository.save(product);
+                // 添加产品到用户的关注列表
+                user.addWatchedProduct(product);
+                userRepository.save(user);
             } else {
                 // 处理用户或产品不存在的情况
                 throw new ProductServiceException("User or Product not found");
@@ -243,9 +253,13 @@ public class ProductService {
                 User user = optionalUser.get();
                 Product product = optionalProduct.get();
 
-                // 从产品的关注列表中移除用户
-                product.removeWatcher(user);
-                productRepository.save(product);
+//                // 从产品的关注列表中移除用户
+//                product.removeWatcher(user);
+//                productRepository.save(product);
+
+                user.removeWatchedProduct(product);
+                userRepository.save(user);
+
             } else {
                 throw new ProductServiceException("User or Product not found");
             }
@@ -263,21 +277,30 @@ public class ProductService {
             Product product = optionalProduct.get();
 
             // 检查用户是否在产品的关注列表中
-            return product.getWatchers().contains(user);
+            return user.getWatchedProducts().contains(product);
         } else {
             throw new ProductServiceException("User or Product not found");
+        }
+    }
+
+    //发送价格更新邮件给关注了产品的用户
+    public void sendLowestPriceUpdateEmails(Product product, double newLowestPrice) {
+
+        // 获取关注了该产品的用户列表
+        Set<User> watchers = productRepository.findUsersWatchingProduct(product);
+
+        for (User user : watchers) {
+            // 创建邮件内容
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(user.getEmail());
+            message.setSubject("LowestPrice Update for " + product.getProductname());
+            message.setText("The newLowestPrice for " + product.getProductname() + " has been updated to " + newLowestPrice);
+
+            // 发送邮件
+            javaMailSender.send(message);
         }
     }
 
 
 
 }
-
-
-
-
-
-
-
-
-

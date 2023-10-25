@@ -58,9 +58,8 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PriceHistory> priceHistoryList = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "watchedProducts")
-    @JsonIgnore
-    private Set<User> watchers = new HashSet<>();
+//    @ManyToMany(mappedBy = "watchedProducts")
+//    private Set<User> watchers = new HashSet<>();
 
 
     public Product(String productname) {
@@ -146,13 +145,13 @@ public class Product {
 
 
 
-    public void addWatcher(User user) {
-        watchers.add(user);
-    }
-
-    public void removeWatcher(User user) {
-        watchers.remove(user);
-    }
+//    public void addWatcher(User user) {
+//        watchers.add(user);
+//    }
+//
+//    public void removeWatcher(User user) {
+//        watchers.remove(user);
+//    }
 
 
     public Product() {}

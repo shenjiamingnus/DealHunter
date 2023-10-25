@@ -16,6 +16,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+
+
 
 import java.util.*;
 import java.util.Arrays;
@@ -33,6 +39,9 @@ class ProductServiceTest {
     UserRepository userRepository;
     @InjectMocks
     ProductService productService;
+
+    @Mock
+    private JavaMailSender javaMailSender;
 
 //    @BeforeEach
 //    void setUp() {
@@ -243,7 +252,6 @@ class ProductServiceTest {
         User user = new User("Username", "TestUser");
         user.setWatchedProducts(new HashSet<>());
         Product product = new Product("Productname", "TestProduct", 29.99);
-        product.setWatchers(new HashSet<>());
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
@@ -253,7 +261,7 @@ class ProductServiceTest {
         productService.addUserWatchesProduct(userId, productId);
 
         // Assert
-        Assertions.assertTrue(product.getWatchers().contains(user));
+        Assertions.assertTrue(user.getWatchedProducts().contains(product));
     }
 
     @Test
@@ -263,9 +271,7 @@ class ProductServiceTest {
         Long productId = 2L;
         User user = new User("Username", "TestUser");
         Product product = new Product("Productname", "TestProduct", 29.99);
-        Set<User> watchers = new HashSet<>();
-        watchers.add(user);
-        product.setWatchers(watchers);
+        user.addWatchedProduct(product);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
@@ -275,7 +281,7 @@ class ProductServiceTest {
         productService.removeUserWatchesProduct(userId, productId);
 
         // Assert
-        Assertions.assertFalse(product.getWatchers().contains(user));
+        Assertions.assertFalse(user.getWatchedProducts().contains(product));
     }
 
     @Test
@@ -285,9 +291,7 @@ class ProductServiceTest {
         Long productId = 2L;
         User user = new User("Username", "TestUser");
         Product product = new Product("Productname", "TestProduct", 29.99);
-        Set<User> watchers = new HashSet<>();
-        watchers.add(user);
-        product.setWatchers(watchers);
+        user.addWatchedProduct(product);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
@@ -299,8 +303,38 @@ class ProductServiceTest {
         Assertions.assertTrue(isWatching);
     }
 
+    @Test
+    public void testSendLowestPriceUpdateEmails() {
+        // 创建一个模拟产品
+        Product product = new Product("Productname", "Brandname", 29.99);
 
+        // 创建一个模拟用户
+        User user = new User("Username", "TestUser");
+        user.setWatchedProducts(new HashSet<>());
+        user.setEmail("user@example.com");
 
+        Set<User> watchers = new HashSet<>();
+        watchers.add(user);
+        Set<Product> watchedProduct = new HashSet<>();
+        watchedProduct.add(product);
+
+        // 设置模拟用户关注的产品
+        user.setWatchedProducts(watchedProduct);
+
+        // 模拟 productRepository 返回关注了产品的用户
+        Mockito.when(productRepository.findUsersWatchingProduct(product)).thenReturn(watchers);
+
+        // 调用被测试方法
+        productService.sendLowestPriceUpdateEmails(product, 9.99);
+
+        // 验证邮件是否被发送
+        SimpleMailMessage expectedMessage = new SimpleMailMessage();
+        expectedMessage.setTo("user@example.com");
+        expectedMessage.setSubject("LowestPrice Update for Productname");
+        expectedMessage.setText("The newLowestPrice for Productname has been updated to 9.99");
+
+        Mockito.verify(javaMailSender).send(expectedMessage);
+    }
 
 }
 

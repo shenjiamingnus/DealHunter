@@ -41,7 +41,7 @@ public class User {
       inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
           name = "user_watched_products",
           joinColumns = @JoinColumn(name = "user_id"),
@@ -51,13 +51,16 @@ public class User {
   private Set<Product> watchedProducts;
 
   public void addWatchedProduct(Product product) {
+    if (watchedProducts == null) {
+      watchedProducts = new HashSet<>();
+    }
     watchedProducts.add(product);
-    product.addWatcher(this);
   }
 
   public void removeWatchedProduct(Product product) {
-    watchedProducts.remove(product);
-    product.removeWatcher(this);
+    if (watchedProducts != null) {
+      watchedProducts.remove(product);
+    }
   }
 
 
