@@ -11,7 +11,6 @@ import com.nus.dealhunter.repository.ProductRepository;
 import com.nus.dealhunter.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.nus.dealhunter.exception.ProductServiceException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import org.springframework.mail.javamail.JavaMailSender;
@@ -107,23 +106,10 @@ public class ProductService  {
     }
 
     public Product updateProduct(UpdateProductRequest updateProductRequest){
-        Product product = new Product();
-        product.setId(updateProductRequest.getProduct_id());
+        Product product = productRepository.findById(updateProductRequest.getProduct_id()).get();
         product.setProductname(updateProductRequest.getProductname());
-        product.setBrandname(updateProductRequest.getBrandname());
         product.setStoreAddress(updateProductRequest.getStoreAddress());
         product.setDescription(updateProductRequest.getDescription());
-        product.setImageUrl(updateProductRequest.getImageUrl());
-        product.setCurrentPrice(updateProductRequest.getCurrentPrice());
-        //如现价低于最低价，更新最低价
-        if(updateProductRequest.getCurrentPrice()<updateProductRequest.getLowestPrice()){
-            product.setLowestPrice(updateProductRequest.getCurrentPrice());
-            //sendLowestPriceUpdateEmails(product, updateProductRequest.getLowestPrice());
-        }else {
-            product.setLowestPrice(updateProductRequest.getLowestPrice());
-        }
-        product.setCreateDate(Instant.now());
-        product.setBrand(new Brand(updateProductRequest.getBrand_id(),updateProductRequest.getBrandname()));
 
         return productRepository.save(product);
     }
