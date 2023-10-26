@@ -56,7 +56,7 @@ public class UserController {
         break;
       }
     }
-    return ResponseEntity.ok(new JwtAuthenticationResponse(generateToken, user.getUsername(), isAdmin));
+    return ResponseEntity.ok(new JwtAuthenticationResponse(generateToken, user.getId(), user.getUsername(), user.getEmail(), isAdmin));
   }
 
   @PostMapping("/signup")
