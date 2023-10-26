@@ -96,6 +96,13 @@ public class ProductService  {
         if (createProductRequest.getBrand_id() != null && createProductRequest.getBrandname() != null) {
             product.setBrand(new Brand(createProductRequest.getBrand_id(), createProductRequest.getBrandname()));
         }
+        Product credatedProduct = productRepository.save(product);
+
+        // 创建新的价格历史记录对象
+        PriceHistory newPriceHistory = new PriceHistory(credatedProduct.getCurrentPrice(), Instant.now(), product);
+
+        priceHistoryRepository.save(newPriceHistory);
+
         return productRepository.save(product);
     }
 
