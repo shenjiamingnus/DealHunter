@@ -4,24 +4,26 @@ import com.nus.dealhunter.model.Brand;
 import com.nus.dealhunter.model.PriceHistory;
 import com.nus.dealhunter.model.Product;
 import com.nus.dealhunter.model.User;
+import com.nus.dealhunter.observer.ProductSubject;
+import com.nus.dealhunter.observer.UserObserver;
 import com.nus.dealhunter.payload.request.CreateProductRequest;
 import com.nus.dealhunter.payload.request.UpdateProductRequest;
 import com.nus.dealhunter.repository.PriceHistoryRepository;
 import com.nus.dealhunter.repository.ProductRepository;
+import com.nus.dealhunter.repository.UserObserverRepository;
 import com.nus.dealhunter.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.nus.dealhunter.exception.ProductServiceException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import java.time.Instant;
 import java.util.*;
 
 @Service
-public class ProductService {
+public class ProductService  {
 
     @Autowired
     private UserRepository userRepository;
@@ -33,7 +35,14 @@ public class ProductService {
     private PriceHistoryRepository priceHistoryRepository;
 
     @Autowired
+    private UserObserverRepository userObserverRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private JavaMailSender javaMailSender;
+
 
     public Boolean checkProductNameExists(String productname) {
         return productRepository.existsByProductname(productname);
@@ -233,6 +242,11 @@ public class ProductService {
                 Product product = optionalProduct.get();
 
                 // 添加产品到用户的关注列表
+//                ProductSubject productSubject = new ProductSubject(product.getId());
+//                UserObserver userObserver = new UserObserver(user.getId(),product.getId());
+//                productSubject.addUserObserver(userObserver);
+//                userObserverRepository.save(userObserver);
+
                 user.addWatchedProduct(product);
                 userRepository.save(user);
             } else {
@@ -256,6 +270,10 @@ public class ProductService {
 //                // 从产品的关注列表中移除用户
 //                product.removeWatcher(user);
 //                productRepository.save(product);
+
+
+
+
 
                 user.removeWatchedProduct(product);
                 userRepository.save(user);
@@ -283,25 +301,45 @@ public class ProductService {
         }
     }
 
-    //发送价格更新邮件给关注了产品的用户
-    public void sendLowestPriceUpdateEmails(Product product, double newLowestPrice) {
+//    //发送价格更新邮件给关注了产品的用户
+//    public void sendLowestPriceUpdateEmails(Product product, double newLowestPrice) {
+//
+//        // 获取关注了该产品的用户列表
+//        Set<User> watchers = productRepository.findUsersWatchingProduct(product);
+//
+//        for (User user : watchers) {
+//            // 创建邮件内容
+//            SimpleMailMessage message = new SimpleMailMessage();
+////            message.setFrom("619176497@qq.com");
+//            message.setTo(user.getEmail());
+//            message.setSubject("LowestPrice Update for " + product.getProductname());
+//            message.setText("The newLowestPrice for " + product.getProductname() + " has been updated to " + newLowestPrice);
+//
+//            // 发送邮件
+//            javaMailSender.send(message);
+//        }
+//    }
 
-        // 获取关注了该产品的用户列表
+    public void sendLowestPriceUpdateEmails(Product product, double newLowestPrice) {
         Set<User> watchers = productRepository.findUsersWatchingProduct(product);
 
-        for (User user : watchers) {
-            // 创建邮件内容
-            SimpleMailMessage message = new SimpleMailMessage();
-//            message.setFrom("619176497@qq.com");
-            message.setTo(user.getEmail());
-            message.setSubject("LowestPrice Update for " + product.getProductname());
-            message.setText("The newLowestPrice for " + product.getProductname() + " has been updated to " + newLowestPrice);
+        UserObserver userObserver = new UserObserver(emailService);
+//        ProductSubject productSubject = new ProductSubject();
 
-            // 发送邮件
-            javaMailSender.send(message);
+        for (User user : watchers) {
+
+            userObserver.update(product, user, newLowestPrice);
+//            userObserver.setUser_id(user.getId());
+//
+//            String userEmail = user.getEmail();
+//            String subject = "Lowest Price Update for " + product.getProductname();
+//            String messageText = "The new lowest price for " + product.getProductname() + " has been updated to " + newLowestPrice;
+//
+//
+//            // 调用EmailService来发送邮件
+//            emailService.sendEmail(userEmail, subject, messageText);
         }
     }
-
 
 
 }

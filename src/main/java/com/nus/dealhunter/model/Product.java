@@ -12,6 +12,9 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.nus.dealhunter.observer.Observer;
+import com.nus.dealhunter.observer.Subject;
+import com.nus.dealhunter.observer.UserObserver;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -58,8 +61,9 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PriceHistory> priceHistoryList = new ArrayList<>();
 
-//    @ManyToMany(mappedBy = "watchedProducts")
-//    private Set<User> watchers = new HashSet<>();
+//    @OneToMany
+//    private List<Observer> observers = new ArrayList<>();
+
 
 
     public Product(String productname) {
@@ -152,7 +156,6 @@ public class Product {
 //    public void removeWatcher(User user) {
 //        watchers.remove(user);
 //    }
-
 
     public Product() {}
 }

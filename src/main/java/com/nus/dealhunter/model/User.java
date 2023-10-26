@@ -50,6 +50,7 @@ public class User {
   @JsonIgnore
   private Set<Product> watchedProducts;
 
+
   public void addWatchedProduct(Product product) {
     if (watchedProducts == null) {
       watchedProducts = new HashSet<>();
@@ -62,7 +63,6 @@ public class User {
       watchedProducts.remove(product);
     }
   }
-
 
   public User(String username, String password) {
     this.username = username;
