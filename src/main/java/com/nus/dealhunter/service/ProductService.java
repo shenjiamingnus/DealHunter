@@ -14,14 +14,13 @@ import com.nus.dealhunter.exception.ProductServiceException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import java.time.Instant;
 import java.util.*;
 
 @Service
-public class ProductService {
+public class ProductService  {
 
     @Autowired
     private UserRepository userRepository;
@@ -33,7 +32,11 @@ public class ProductService {
     private PriceHistoryRepository priceHistoryRepository;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private JavaMailSender javaMailSender;
+
 
     public Boolean checkProductNameExists(String productname) {
         return productRepository.existsByProductname(productname);
@@ -108,7 +111,7 @@ public class ProductService {
         //如现价低于最低价，更新最低价
         if(updateProductRequest.getCurrentPrice()<updateProductRequest.getLowestPrice()){
             product.setLowestPrice(updateProductRequest.getCurrentPrice());
-            sendLowestPriceUpdateEmails(product, updateProductRequest.getLowestPrice());
+            //sendLowestPriceUpdateEmails(product, updateProductRequest.getLowestPrice());
         }else {
             product.setLowestPrice(updateProductRequest.getLowestPrice());
         }
@@ -234,6 +237,11 @@ public class ProductService {
                 Product product = optionalProduct.get();
 
                 // 添加产品到用户的关注列表
+//                ProductSubject productSubject = new ProductSubject(product.getId());
+//                UserObserver userObserver = new UserObserver(user.getId(),product.getId());
+//                productSubject.addUserObserver(userObserver);
+//                userObserverRepository.save(userObserver);
+
                 user.addWatchedProduct(product);
                 userRepository.save(user);
                 product.addWatcher(user);
@@ -286,23 +294,25 @@ public class ProductService {
         }
     }
 
-    //发送价格更新邮件给关注了产品的用户
-    public void sendLowestPriceUpdateEmails(Product product, double newLowestPrice) {
+//    //发送价格更新邮件给关注了产品的用户
+//    public void sendLowestPriceUpdateEmails(Product product, double newLowestPrice) {
+//
+//        // 获取关注了该产品的用户列表
+//        Set<User> watchers = productRepository.findUsersWatchingProduct(product);
+//
+//        for (User user : watchers) {
+//            // 创建邮件内容
+//            SimpleMailMessage message = new SimpleMailMessage();
+////            message.setFrom("619176497@qq.com");
+//            message.setTo(user.getEmail());
+//            message.setSubject("LowestPrice Update for " + product.getProductname());
+//            message.setText("The newLowestPrice for " + product.getProductname() + " has been updated to " + newLowestPrice);
+//
+//            // 发送邮件
+//            javaMailSender.send(message);
+//        }
+//    }
 
-        // 获取关注了该产品的用户列表
-        Set<User> watchers = productRepository.findUsersWatchingProduct(product);
-
-        for (User user : watchers) {
-            // 创建邮件内容
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(user.getEmail());
-            message.setSubject("LowestPrice Update for " + product.getProductname());
-            message.setText("The newLowestPrice for " + product.getProductname() + " has been updated to " + newLowestPrice);
-
-            // 发送邮件
-            javaMailSender.send(message);
-        }
-    }
 
 
 

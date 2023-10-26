@@ -54,6 +54,7 @@ public class User implements Observer{
   @JsonIgnore
   private Set<Product> watchedProducts = new HashSet<>();
 
+
   public void addWatchedProduct(Product product) {
     if (watchedProducts == null) {
       watchedProducts = new HashSet<>();
@@ -66,7 +67,6 @@ public class User implements Observer{
       watchedProducts.remove(product);
     }
   }
-
 
   public User(String username, String password) {
     this.username = username;

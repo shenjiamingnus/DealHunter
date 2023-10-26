@@ -1,5 +1,7 @@
 package com.nus.dealhunter.controller;
 
+import com.nus.dealhunter.annotation.CurrentUser;
+import com.nus.dealhunter.model.CustomUserDetails;
 import com.nus.dealhunter.model.Product;
 import com.nus.dealhunter.payload.request.CreateProductRequest;
 import com.nus.dealhunter.payload.request.UpdateProductRequest;
@@ -64,9 +66,6 @@ public class ProductController {
         }
     }
 
-
-
-
     @PostMapping
     public ResponseEntity<GeneralApiResponse> createProduct(@RequestBody CreateProductRequest createProductRequest){
         Product savedProduct = productService.createProduct(createProductRequest);
@@ -76,9 +75,7 @@ public class ProductController {
             return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to created"));
         }
     }
-
-
-
+    
     @PutMapping
     public ResponseEntity<GeneralApiResponse> updateProduct(@RequestBody UpdateProductRequest updateProductRequest){
         Product updatedProduct = productService.updateProduct(updateProductRequest);
@@ -112,37 +109,35 @@ public class ProductController {
         return ResponseEntity.ok(updatedProduct);
     }
 
-
-
-    @PostMapping("/{productId}/addWatchers/{userId}")
-    public ResponseEntity<Void> addUserWatchesProduct(@PathVariable Long userId, @PathVariable Long productId) {
-        productService.addUserWatchesProduct(userId, productId);
+    @PostMapping("/{productId}/addWatchers")
+    public ResponseEntity<Void> addUserWatchesProduct(@CurrentUser CustomUserDetails userDetails, @PathVariable Long productId) {
+        productService.addUserWatchesProduct(userDetails.getId(), productId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{productId}/deleteWatchers/{userId}")
-    public ResponseEntity<Void> removeUserWatchesProduct(@PathVariable Long userId, @PathVariable Long productId) {
-        productService.removeUserWatchesProduct(userId, productId);
+    @DeleteMapping("/{productId}/deleteWatchers")
+    public ResponseEntity<Void> removeUserWatchesProduct(@CurrentUser CustomUserDetails userDetails, @PathVariable Long productId) {
+        productService.removeUserWatchesProduct(userDetails.getId(), productId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/{productId}/checkWatchers/{userId}")
-    public ResponseEntity<Boolean> isUserWatchingProduct(@PathVariable Long userId, @PathVariable Long productId) {
-        boolean isWatching = productService.isUserWatchingProduct(userId, productId);
+    @GetMapping("/{productId}/checkWatchers")
+    public ResponseEntity<Boolean> isUserWatchingProduct(@CurrentUser CustomUserDetails userDetails, @PathVariable Long productId) {
+        boolean isWatching = productService.isUserWatchingProduct(userDetails.getId(), productId);
         return new ResponseEntity<>(isWatching, HttpStatus.OK);
     }
 
-    @PostMapping("/{productId}/send-price-update-email")
-    public ResponseEntity<String> sendLowestPriceUpdateEmail(@PathVariable Long productId, @RequestParam double newLowestPrice) {
-        Product product = productService.getProductById(productId).orElse(null);
-
-        if (product != null) {
-            productService.sendLowestPriceUpdateEmails(product, newLowestPrice);
-            return new ResponseEntity<>("Price update emails sent successfully.", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Product not found.", HttpStatus.NOT_FOUND);
-        }
-    }
+//    @PostMapping("/{productId}/send-price-update-email")
+//    public ResponseEntity<String> sendLowestPriceUpdateEmail(@PathVariable Long productId, @RequestParam double newLowestPrice) {
+//        Product product = productService.getProductById(productId).orElse(null);
+//
+//        if (product != null) {
+//            productService.sendLowestPriceUpdateEmails(product, newLowestPrice);
+//            return new ResponseEntity<>("Price update emails sent successfully.", HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>("Product not found.", HttpStatus.NOT_FOUND);
+//        }
+//    }
 
 
 }
