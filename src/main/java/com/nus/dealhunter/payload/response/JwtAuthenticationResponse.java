@@ -13,9 +13,15 @@ public class JwtAuthenticationResponse {
 
   private Integer isAdmin;
 
-  public JwtAuthenticationResponse(String accessToken, String username, Integer isAdmin) {
+  private Long userId;
+
+  private String email;
+
+  public JwtAuthenticationResponse(String accessToken, Long id, String username, String email, Integer isAdmin) {
     this.accessToken = accessToken;
     this.username = username;
     this.isAdmin = isAdmin;
+    this.userId = id;
+    this.email = email;
   }
 }
