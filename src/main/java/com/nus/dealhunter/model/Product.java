@@ -65,6 +65,7 @@ public class Product {
 
 
     @ManyToMany(mappedBy = "watchedProducts")
+    @JsonIgnore
     private Set<User> watchers;
 
 

@@ -51,6 +51,7 @@ public class User implements Observer{
           joinColumns = @JoinColumn(name = "user_id"),
           inverseJoinColumns = @JoinColumn(name = "product_id")
   )
+  @JsonIgnore
   private Set<Product> watchedProducts = new HashSet<>();
 
 
