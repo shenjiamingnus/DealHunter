@@ -11,6 +11,7 @@ import com.nus.dealhunter.repository.ProductRepository;
 import com.nus.dealhunter.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.nus.dealhunter.exception.ProductServiceException;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import org.springframework.mail.javamail.JavaMailSender;
@@ -110,7 +111,7 @@ public class ProductService  {
         //如现价低于最低价，更新最低价
         if(updateProductRequest.getCurrentPrice()<updateProductRequest.getLowestPrice()){
             product.setLowestPrice(updateProductRequest.getCurrentPrice());
-            sendLowestPriceUpdateEmails(product, updateProductRequest.getLowestPrice());
+            //sendLowestPriceUpdateEmails(product, updateProductRequest.getLowestPrice());
         }else {
             product.setLowestPrice(updateProductRequest.getLowestPrice());
         }
@@ -267,10 +268,6 @@ public class ProductService  {
                 product.removeWatcher(user);
                 productRepository.save(product);
 
-
-
-
-
                 user.removeWatchedProduct(product);
                 userRepository.save(user);
 
@@ -316,26 +313,7 @@ public class ProductService  {
 //        }
 //    }
 
-    public void sendLowestPriceUpdateEmails(Product product, double newLowestPrice) {
-        Set<User> watchers = productRepository.findUsersWatchingProduct(product);
 
-//        UserObserver userObserver = new UserObserver(emailService);
-////        ProductSubject productSubject = new ProductSubject();
-//
-//        for (User user : watchers) {
-//
-//            userObserver.update(product, user, newLowestPrice);
-//            userObserver.setUser_id(user.getId());
-
-        for (User user : watchers) {
-            String userEmail = user.getEmail();
-            String subject = "Lowest Price Update for " + product.getProductname();
-            String messageText = "The new lowest price for " + product.getProductname() + " has been updated to " + newLowestPrice;
-
-            // 调用EmailService来发送邮件
-            emailService.sendEmail(userEmail, subject, messageText);
-        }
-    }
 
 
 }

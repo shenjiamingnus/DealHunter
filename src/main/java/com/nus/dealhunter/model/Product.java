@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.Getter;
@@ -91,6 +92,7 @@ public class Product {
         this.brandname = brandname;
         this.currentPrice = currentPrice;
         this.lowestPrice = currentPrice;
+        this.watchers = new HashSet<>();
     }
 
     public Product(String productname, String brandname, double currentPrice,String storeAddress, String description) {
@@ -159,7 +161,11 @@ public class Product {
     }
 
     public void notify(double newPrice){
-      for(User user : watchers){
+        if (this.watchers == null) {
+            this.watchers = new HashSet<>(); // 创建一个空的 watchers 集合
+        }
+
+        for(User user : watchers){
         user.update(this, newPrice);
       }
     }
