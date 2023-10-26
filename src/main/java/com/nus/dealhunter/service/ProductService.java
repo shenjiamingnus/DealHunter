@@ -4,17 +4,13 @@ import com.nus.dealhunter.model.Brand;
 import com.nus.dealhunter.model.PriceHistory;
 import com.nus.dealhunter.model.Product;
 import com.nus.dealhunter.model.User;
-import com.nus.dealhunter.observer.ProductSubject;
-import com.nus.dealhunter.observer.UserObserver;
 import com.nus.dealhunter.payload.request.CreateProductRequest;
 import com.nus.dealhunter.payload.request.UpdateProductRequest;
 import com.nus.dealhunter.repository.PriceHistoryRepository;
 import com.nus.dealhunter.repository.ProductRepository;
-import com.nus.dealhunter.repository.UserObserverRepository;
 import com.nus.dealhunter.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.nus.dealhunter.exception.ProductServiceException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import org.springframework.mail.javamail.JavaMailSender;
@@ -33,9 +29,6 @@ public class ProductService  {
 
     @Autowired
     private PriceHistoryRepository priceHistoryRepository;
-
-    @Autowired
-    private UserObserverRepository userObserverRepository;
 
     @Autowired
     private EmailService emailService;
@@ -326,21 +319,21 @@ public class ProductService  {
     public void sendLowestPriceUpdateEmails(Product product, double newLowestPrice) {
         Set<User> watchers = productRepository.findUsersWatchingProduct(product);
 
-        UserObserver userObserver = new UserObserver(emailService);
-//        ProductSubject productSubject = new ProductSubject();
+//        UserObserver userObserver = new UserObserver(emailService);
+////        ProductSubject productSubject = new ProductSubject();
+//
+//        for (User user : watchers) {
+//
+//            userObserver.update(product, user, newLowestPrice);
+//            userObserver.setUser_id(user.getId());
 
         for (User user : watchers) {
+            String userEmail = user.getEmail();
+            String subject = "Lowest Price Update for " + product.getProductname();
+            String messageText = "The new lowest price for " + product.getProductname() + " has been updated to " + newLowestPrice;
 
-            userObserver.update(product, user, newLowestPrice);
-//            userObserver.setUser_id(user.getId());
-//
-//            String userEmail = user.getEmail();
-//            String subject = "Lowest Price Update for " + product.getProductname();
-//            String messageText = "The new lowest price for " + product.getProductname() + " has been updated to " + newLowestPrice;
-//
-//
-//            // 调用EmailService来发送邮件
-//            emailService.sendEmail(userEmail, subject, messageText);
+            // 调用EmailService来发送邮件
+            emailService.sendEmail(userEmail, subject, messageText);
         }
     }
 

@@ -10,11 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.nus.dealhunter.observer.Observer;
-import com.nus.dealhunter.observer.Subject;
-import com.nus.dealhunter.observer.UserObserver;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -151,6 +147,7 @@ public class Product {
     public double getLowestPrice() {
         return lowestPrice;
     }
+
 
     public void addWatcher(User user) {
         watchers.add(user);
