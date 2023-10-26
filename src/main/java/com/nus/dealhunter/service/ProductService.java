@@ -195,7 +195,8 @@ public class ProductService {
                 // 如果新价格低于历史最低价或历史最低价为0，更新历史最低价，并发送邮件
                 if (newPrice < product.getLowestPrice() || product.getLowestPrice() == 0) {
                     product.setLowestPrice(newPrice);
-                    sendLowestPriceUpdateEmails(product, product.getLowestPrice());
+                    product.notify(newPrice);
+//                    sendLowestPriceUpdateEmails(product, product.getLowestPrice());
                 }
 
 //                List<PriceHistory> priceHistoryList = product.getPriceHistoryList();
@@ -235,6 +236,8 @@ public class ProductService {
                 // 添加产品到用户的关注列表
                 user.addWatchedProduct(product);
                 userRepository.save(user);
+                product.addWatcher(user);
+                productRepository.save(product);
             } else {
                 // 处理用户或产品不存在的情况
                 throw new ProductServiceException("User or Product not found");
@@ -253,9 +256,9 @@ public class ProductService {
                 User user = optionalUser.get();
                 Product product = optionalProduct.get();
 
-//                // 从产品的关注列表中移除用户
-//                product.removeWatcher(user);
-//                productRepository.save(product);
+                // 从产品的关注列表中移除用户
+                product.removeWatcher(user);
+                productRepository.save(product);
 
                 user.removeWatchedProduct(product);
                 userRepository.save(user);

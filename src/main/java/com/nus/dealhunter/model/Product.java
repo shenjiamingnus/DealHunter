@@ -13,10 +13,13 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "products", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"productname"})
@@ -58,14 +61,13 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PriceHistory> priceHistoryList = new ArrayList<>();
 
-//    @ManyToMany(mappedBy = "watchedProducts")
-//    private Set<User> watchers = new HashSet<>();
+    @ManyToMany(mappedBy = "watchedProducts")
+    private Set<User> watchers;
 
 
     public Product(String productname) {
         this.productname = productname;
     }
-
 
     public Product(String productname, String brandname) {
         this.productname = productname;
@@ -143,15 +145,19 @@ public class Product {
         return lowestPrice;
     }
 
+    public void addWatcher(User user) {
+        watchers.add(user);
+    }
 
+    public void removeWatcher(User user) {
+        watchers.remove(user);
+    }
 
-//    public void addWatcher(User user) {
-//        watchers.add(user);
-//    }
-//
-//    public void removeWatcher(User user) {
-//        watchers.remove(user);
-//    }
+    public void notify(double newPrice){
+      for(User user : watchers){
+        user.update(this, newPrice);
+      }
+    }
 
 
     public Product() {}
