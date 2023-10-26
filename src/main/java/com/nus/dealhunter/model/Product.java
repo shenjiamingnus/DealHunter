@@ -62,6 +62,7 @@ public class Product {
     private List<PriceHistory> priceHistoryList = new ArrayList<>();
 
     @ManyToMany(mappedBy = "watchedProducts")
+    @JsonIgnore
     private Set<User> watchers;
 
 
