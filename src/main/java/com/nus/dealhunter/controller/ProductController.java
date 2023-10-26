@@ -66,9 +66,6 @@ public class ProductController {
         }
     }
 
-
-
-
     @PostMapping
     public ResponseEntity<GeneralApiResponse> createProduct(@RequestBody CreateProductRequest createProductRequest){
         Product savedProduct = productService.createProduct(createProductRequest);
@@ -78,9 +75,7 @@ public class ProductController {
             return ResponseEntity.ok(new GeneralApiResponse(false,"Product failed to created"));
         }
     }
-
-
-
+    
     @PutMapping
     public ResponseEntity<GeneralApiResponse> updateProduct(@RequestBody UpdateProductRequest updateProductRequest){
         Product updatedProduct = productService.updateProduct(updateProductRequest);
