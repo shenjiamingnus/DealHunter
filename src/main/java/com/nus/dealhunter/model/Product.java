@@ -57,10 +57,10 @@ public class Product {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL) // , orphanRemoval = true
     private List<PriceHistory> priceHistoryList = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "watchedProducts")
+    @ManyToMany(mappedBy = "watchedProducts", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<User> watchers;
 
