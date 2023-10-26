@@ -1,7 +1,7 @@
 package com.nus.dealhunter.controller;
 import com.nus.dealhunter.model.Brand;
-import com.nus.dealhunter.model.Product;
 import com.nus.dealhunter.payload.request.CreateBrandRequest;
+import com.nus.dealhunter.payload.request.ModifyBrandRequest;
 import com.nus.dealhunter.payload.response.GeneralApiResponse;
 import com.nus.dealhunter.service.BrandService;
 import com.nus.dealhunter.util.JwtTokenUtil;
@@ -36,6 +36,16 @@ public class BrandController {
             return ResponseEntity.ok(new GeneralApiResponse(true,"Brand created!"));
         }else {
             return ResponseEntity.ok(new GeneralApiResponse(false,"Brand failed to created"));
+        }
+
+    }
+    @PutMapping
+    public ResponseEntity<GeneralApiResponse> modifyBrand(@RequestBody ModifyBrandRequest modifyBrandRequest){
+        Brand modifiedBrand = brandService.modifyBrand(modifyBrandRequest);
+        if(modifiedBrand != null){
+            return ResponseEntity.ok(new GeneralApiResponse(true,"Brand modified!"));
+        }else {
+            return ResponseEntity.ok(new GeneralApiResponse(false,"Brand failed to modify"));
         }
 
     }

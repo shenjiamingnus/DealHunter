@@ -1,7 +1,10 @@
 package com.nus.dealhunter.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.nus.dealhunter.util.EmailUtil;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -11,12 +14,13 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "users", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"username"})
 })
-public class User {
+public class User implements Observer{
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,8 +51,7 @@ public class User {
           joinColumns = @JoinColumn(name = "user_id"),
           inverseJoinColumns = @JoinColumn(name = "product_id")
   )
-  @JsonIgnore
-  private Set<Product> watchedProducts;
+  private Set<Product> watchedProducts = new HashSet<>();
 
 
   public void addWatchedProduct(Product product) {
@@ -67,6 +70,12 @@ public class User {
   public User(String username, String password) {
     this.username = username;
     this.password = password;
+  }
+
+  @Override
+  public boolean update(Product product, double newLowestPrice) {
+    EmailUtil.sendEmail(this, product, newLowestPrice);
+    return false;
   }
 
   public User() {}

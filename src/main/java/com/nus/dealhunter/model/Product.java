@@ -16,10 +16,13 @@ import com.nus.dealhunter.observer.Observer;
 import com.nus.dealhunter.observer.Subject;
 import com.nus.dealhunter.observer.UserObserver;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "products", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"productname"})
@@ -65,11 +68,13 @@ public class Product {
 //    private List<Observer> observers = new ArrayList<>();
 
 
+    @ManyToMany(mappedBy = "watchedProducts")
+    private Set<User> watchers;
+
 
     public Product(String productname) {
         this.productname = productname;
     }
-
 
     public Product(String productname, String brandname) {
         this.productname = productname;
@@ -147,15 +152,19 @@ public class Product {
         return lowestPrice;
     }
 
+    public void addWatcher(User user) {
+        watchers.add(user);
+    }
 
+    public void removeWatcher(User user) {
+        watchers.remove(user);
+    }
 
-//    public void addWatcher(User user) {
-//        watchers.add(user);
-//    }
-//
-//    public void removeWatcher(User user) {
-//        watchers.remove(user);
-//    }
+    public void notify(double newPrice){
+      for(User user : watchers){
+        user.update(this, newPrice);
+      }
+    }
 
     public Product() {}
 }

@@ -5,6 +5,7 @@ import com.nus.dealhunter.model.Brand;
 
 import com.nus.dealhunter.payload.request.CreateBrandRequest;
 
+import com.nus.dealhunter.payload.request.ModifyBrandRequest;
 import com.nus.dealhunter.repository.BrandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,14 +37,7 @@ public class BrandService {
 
     }
 
-//    public Brand saveBrand(Brand brand) {
-//        try {
-//            return brandRepository.save(brand);
-//        }catch (Exception e){
-//            throw new BrandServiceException("Failed to save brand", e);
-//        }
-//
-//    }
+
 public Brand createBrand(CreateBrandRequest createBrandRequest){
     if (createBrandRequest == null) {
         return null;
@@ -54,6 +48,15 @@ public Brand createBrand(CreateBrandRequest createBrandRequest){
     brand.setImageUrl(createBrandRequest.getImageUrl());
     brand.setCreateDate(Instant.now());
     return brandRepository.save(brand);
+}
+
+public  Brand modifyBrand(ModifyBrandRequest modifyBrandRequest){
+        Brand brand = new Brand();
+        brand.setId(modifyBrandRequest.getId());
+        brand.setBrandname(modifyBrandRequest.getBrandname());
+        brand.setDescription(modifyBrandRequest.getDescription());
+        brand.setCreateDate(Instant.now());
+        return brandRepository.save(brand);
 }
 
 
