@@ -51,11 +51,17 @@ public Brand createBrand(CreateBrandRequest createBrandRequest){
 }
 
 public  Brand modifyBrand(ModifyBrandRequest modifyBrandRequest){
+        Optional<Brand> optionalBrand = brandRepository.findById(modifyBrandRequest.getId());
 
-        Brand brand = brandRepository.findById(modifyBrandRequest.getId()).get();
+        if(optionalBrand.isPresent()){
+
+        Brand brand = optionalBrand.get();
         brand.setBrandname(modifyBrandRequest.getBrandname());
         brand.setDescription(modifyBrandRequest.getDescription());
-        return brandRepository.save(brand);
+        brandRepository.save(brand);
+        };
+        return optionalBrand.orElse(null);
+
 }
 
 

@@ -106,12 +106,16 @@ public class ProductService  {
     }
 
     public Product updateProduct(UpdateProductRequest updateProductRequest){
-        Product product = productRepository.findById(updateProductRequest.getProduct_id()).get();
-        product.setProductname(updateProductRequest.getProductname());
-        product.setStoreAddress(updateProductRequest.getStoreAddress());
-        product.setDescription(updateProductRequest.getDescription());
+        Optional<Product> optionalProduct = productRepository.findById(updateProductRequest.getProduct_id());
 
-        return productRepository.save(product);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            product.setProductname(updateProductRequest.getProductname());
+            product.setStoreAddress(updateProductRequest.getStoreAddress());
+            product.setDescription(updateProductRequest.getDescription());
+            productRepository.save(product);
+        };
+        return optionalProduct.orElse(null);
     }
 
     public void deleteProduct(Long id) {
