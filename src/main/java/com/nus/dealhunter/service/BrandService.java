@@ -59,7 +59,7 @@ public  Brand modifyBrand(ModifyBrandRequest modifyBrandRequest){
         brand.setBrandname(modifyBrandRequest.getBrandname());
         brand.setDescription(modifyBrandRequest.getDescription());
         brandRepository.save(brand);
-        };
+        }
         return optionalBrand.orElse(null);
 
 }
@@ -83,20 +83,6 @@ public  Brand modifyBrand(ModifyBrandRequest modifyBrandRequest){
         }
     }
 
-
-
-    public Brand save(Brand brand){
-       return brandRepository.save(brand);
-    }
-
-    public  void delete(Long id){
-        brandRepository.deleteById(id);
-    }
-
-
-    public Optional<Brand> findById(Long id){
-        return brandRepository.findById(id);
-    }
 
 
 

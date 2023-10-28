@@ -30,11 +30,7 @@ public class ProductService  {
     @Autowired
     private PriceHistoryRepository priceHistoryRepository;
 
-    @Autowired
-    private EmailService emailService;
 
-    @Autowired
-    private JavaMailSender javaMailSender;
 
 
     public Boolean checkProductNameExists(String productname) {
@@ -114,7 +110,7 @@ public class ProductService  {
             product.setStoreAddress(updateProductRequest.getStoreAddress());
             product.setDescription(updateProductRequest.getDescription());
             productRepository.save(product);
-        };
+        }
         return optionalProduct.orElse(null);
     }
 
