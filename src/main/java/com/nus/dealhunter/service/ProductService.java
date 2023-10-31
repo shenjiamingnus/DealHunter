@@ -98,7 +98,7 @@ public class ProductService  {
 
         priceHistoryRepository.save(newPriceHistory);
 
-        return productRepository.save(product);
+        return credatedProduct;
     }
 
     public Product updateProduct(UpdateProductRequest updateProductRequest){
