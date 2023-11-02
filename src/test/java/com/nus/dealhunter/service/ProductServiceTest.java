@@ -40,8 +40,8 @@ class ProductServiceTest {
     @InjectMocks
     ProductService productService;
 
-    @Mock
-    private JavaMailSender javaMailSender;
+//    @Mock
+//    private JavaMailSender javaMailSender;
 
 //    @BeforeEach
 //    void setUp() {
