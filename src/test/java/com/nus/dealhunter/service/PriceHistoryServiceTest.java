@@ -7,18 +7,17 @@ import com.nus.dealhunter.model.Product;
 import com.nus.dealhunter.payload.request.CreatePriceHistoryRequest;
 import com.nus.dealhunter.repository.PriceHistoryRepository;
 import com.nus.dealhunter.repository.ProductRepository;
-import com.nus.dealhunter.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -27,6 +26,8 @@ import static org.mockito.Mockito.when;
 
 public class PriceHistoryServiceTest {
 
+    @Mock
+    ProductRepository productRepository;
     @Mock
     PriceHistoryRepository priceHistoryRepository;
 
@@ -92,27 +93,50 @@ public class PriceHistoryServiceTest {
     }
 
     @Test
-    public void testViewHistoricalPriceTrendsException() {
+    public void testViewHistoricalPriceTrends() {
         Long productId = 1L;
         Instant startDate = Instant.parse("2023-01-01T00:00:00Z");
-        Instant endDate = Instant.parse("2023-02-01T00:00:00Z");
+        Instant endDate = Instant.parse("2023-12-31T23:59:59Z");
 
-//        List<PriceHistory> priceHistoryList = new ArrayList<>();
+        Product product1 = new Product("productname","brandname",0d);
+        PriceHistory priceHistory1 = new PriceHistory(Long.valueOf(1),0d, Instant.now(), product1);
+        PriceHistory priceHistory2 = new PriceHistory(Long.valueOf(1),0d, Instant.now(), product1);
 
-        // 模拟 viewHistoricalPriceTrends 方法的行为
-        when(priceHistoryService.viewHistoricalPriceTrends(anyLong(), any(Instant.class), any(Instant.class))).thenThrow(new PriceHistoryServiceException("Failed to view historical price trends for product with ID " + 1));
+        List<PriceHistory> priceHistoryList = new ArrayList<>();
+        priceHistoryList.add(priceHistory1);
+        priceHistoryList.add(priceHistory2);
 
-        // 调用被测试的方法，并捕获异常
-        PriceHistoryServiceException exception = Assertions.assertThrows(PriceHistoryServiceException.class, () -> {
-            priceHistoryService.viewHistoricalPriceTrends(productId, startDate, endDate);
-        });
+        Mockito.when(productRepository.findById(productId)).thenReturn(Optional.of(product1));
+        Mockito.when(priceHistoryRepository.findByProductIdAndCreateDateBetween(productId, startDate, endDate)).thenReturn(priceHistoryList);
 
-        // 验证异常消息是否符合预期
-        Assertions.assertEquals("Failed to view historical price trends for product with ID 1", exception.getMessage());
+        List<PriceHistory> result = priceHistoryService.viewHistoricalPriceTrends(productId, startDate, endDate);
 
-        // 验证方法是否按预期调用
-        Mockito.verify(priceHistoryService, times(1)).viewHistoricalPriceTrends(productId, startDate, endDate);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(2, result.size());
     }
 
+//    @Test
+//    public void testViewHistoricalPriceTrendsException() {
+//        Long productId = 1L;
+//        Instant startDate = Instant.parse("2023-01-01T00:00:00Z");
+//        Instant endDate = Instant.parse("2023-02-01T00:00:00Z");
+//
+////        List<PriceHistory> priceHistoryList = new ArrayList<>();
+//
+//        // 模拟 viewHistoricalPriceTrends 方法的行为
+//        when(priceHistoryService.viewHistoricalPriceTrends(anyLong(), any(Instant.class), any(Instant.class)))
+//                .thenThrow(new PriceHistoryServiceException("Failed to view historical price trends for product with ID " + 1));
+//
+//        // 调用被测试的方法，并捕获异常
+//        PriceHistoryServiceException exception = Assertions.assertThrows(PriceHistoryServiceException.class, () -> {
+//            priceHistoryService.viewHistoricalPriceTrends(productId, startDate, endDate);
+//        });
+//
+//        // 验证异常消息是否符合预期
+//        Assertions.assertEquals("Failed to view historical price trends for product with ID 1", exception.getMessage());
+//
+//        // 验证方法是否按预期调用
+//        Mockito.verify(priceHistoryService, times(1)).viewHistoricalPriceTrends(productId, startDate, endDate);
+//    }
 
 }
