@@ -82,12 +82,14 @@ public class PriceHistoryService {
                 List<PriceHistory> priceHistoryList = priceHistoryRepository.findByProductIdAndCreateDateBetween(Id, startDate, endDate);
                 return priceHistoryList;
             } else {
-                throw new ProductServiceException("Product with ID " + Id + " not found");
+                throw new PriceHistoryServiceException("Product with ID " + Id + " not found");
             }
         } catch (Exception e) {
-            throw new ProductServiceException("Failed to view historical price trends for product with ID " + Id, e);
+            throw new PriceHistoryServiceException("Failed to view historical price trends for product with ID " + Id, e);
         }
     }
+
+
 
 
 }

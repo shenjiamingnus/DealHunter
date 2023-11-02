@@ -34,9 +34,6 @@ public class PriceHistoryController {
     @Autowired
     private PriceHistoryService priceHistoryService;
 
-    @Autowired
-    JwtTokenUtil jwtTokenUtil;
-
 
     @PostMapping("/price-history/create")
     public ResponseEntity<GeneralApiResponse> createPriceHistory(@RequestBody CreatePriceHistoryRequest createPriceHistoryRequest) {
