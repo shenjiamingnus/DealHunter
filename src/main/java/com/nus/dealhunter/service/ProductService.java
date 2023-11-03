@@ -80,7 +80,7 @@ public class ProductService  {
         }
         Product product = new Product();
         product.setProductname(createProductRequest.getProductname());
-        product.setBrandname(createProductRequest.getBrandname());
+        product.setBrandName(createProductRequest.getBrandname());
         product.setStoreAddress(createProductRequest.getStoreAddress());
         product.setDescription(createProductRequest.getDescription());
         product.setImageUrl(createProductRequest.getImageUrl());

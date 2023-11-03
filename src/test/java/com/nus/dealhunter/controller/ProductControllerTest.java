@@ -1,5 +1,6 @@
 package com.nus.dealhunter.controller;
 
+import com.nus.dealhunter.model.CustomUserDetails;
 import com.nus.dealhunter.model.PriceHistory;
 import com.nus.dealhunter.model.Product;
 import com.nus.dealhunter.payload.request.CreateProductRequest;
@@ -44,9 +45,15 @@ class ProductControllerTest{
     void testGetAllProducts() {
 
         // 创建模拟的 Product 对象
-        Product product1 = new Product( "productname1", "brandname1");
-        Product product2 = new Product( "anotherproduct", "brandname2");
-        Product product3 = new Product( "yetanotherproduct", "brandname1");
+        Product product1 = new Product();
+        product1.setProductName("productname1");
+        product1.setBrandName("brandname1");
+        Product product2 = new Product();
+        product2.setProductName("anotherproduct");
+        product2.setBrandName("brandname2");
+        Product product3 = new Product();
+        product3.setProductName("yetanotherproduct");
+        product3.setBrandName("brandname1");
 
         // 使用 Arrays.asList 创建 List
         List<Product> productList = Arrays.asList(product1, product2, product3);
@@ -73,11 +80,16 @@ class ProductControllerTest{
         // 模拟 getProductByProductname 方法的行为
         when(productService.getProductByProductname(anyString())).thenReturn(productList);
 
-//        // 测试 Controller
-//        ResponseEntity<List<Product>> result = productController.getProductByProductname("productname");
-//
-//        // 断言
-//        Assertions.assertEquals(productList, result.getBody());
+        ResponseEntity<List<Product>> result = productController.getProductByProductname("productname");
+        Assertions.assertEquals(productList, result.getBody());
+    }
+
+    @Test
+    public void testGetProductByBrandname() throws Exception {
+        when(productService.getProductByBrandname(anyString())).thenReturn(Arrays.<Product>asList(new Product("productname", "brandname", 0d, "storeAddress", "description", "imageUrl")));
+
+        ResponseEntity<List<Product>> result = productController.getProductByBrandname("brandname");
+        Assert.assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
     @Test
@@ -174,6 +186,21 @@ class ProductControllerTest{
         Assertions.assertEquals(product1, result.getBody());
     }
 
+    @Test
+    public void testAddUserWatchesProduct() throws Exception {
+        Assertions.assertEquals(HttpStatus.OK, productController.addUserWatchesProduct(new CustomUserDetails(Long.valueOf(1), "123", "123"), 1L).getStatusCode());
+    }
+
+    @Test
+    public void testRemoveUserWatchesProduct() throws Exception {
+        Assertions.assertEquals(HttpStatus.OK, productController.removeUserWatchesProduct(new CustomUserDetails(Long.valueOf(1), "123", "123"), 1L).getStatusCode());
+    }
+
+    @Test
+    public void testIsUserWatchingProduct() throws Exception {
+        when(productService.isUserWatchingProduct(1L, 1L)).thenReturn(true);
+        Assertions.assertTrue(productController.isUserWatchingProduct(new CustomUserDetails(Long.valueOf(1l), "123", "123"), 1L).getBody());
+    }
 
 
 

@@ -168,4 +168,12 @@ public class Product {
     }
 
     public Product() {}
+
+    public void setProductName(String productname) {
+        this.productname = productname;
+    }
+
+    public void setBrandName(String brandname) {
+        this.productname = brandname;
+    }
 }
