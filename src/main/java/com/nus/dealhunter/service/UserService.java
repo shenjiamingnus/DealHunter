@@ -34,8 +34,13 @@ public class UserService {
   @Autowired
   UserRepository userRepository;
 
+
+  private static UserFactory userFactory;
+
   @Autowired
-  UserFactory userFactory;
+  public void setUserServer(UserFactory userFactory) {
+    UserService.userFactory = userFactory;
+  }
 
   public Boolean checkUserNameExists(String username) {
     return userRepository.existsByUsername(username);
