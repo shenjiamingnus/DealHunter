@@ -2,6 +2,7 @@ package com.nus.dealhunter.service;
 
 import com.nus.dealhunter.enums.RoleName;
 import com.nus.dealhunter.exception.CommonException;
+import com.nus.dealhunter.factory.UserFactory;
 import com.nus.dealhunter.model.CustomUserDetails;
 import com.nus.dealhunter.model.Role;
 import com.nus.dealhunter.model.User;
@@ -33,6 +34,9 @@ public class UserService {
   @Autowired
   UserRepository userRepository;
 
+  @Autowired
+  UserFactory userFactory;
+
   public Boolean checkUserNameExists(String username) {
     return userRepository.existsByUsername(username);
   }
@@ -48,29 +52,20 @@ public class UserService {
   }
 
   public User createUser(SignupRequest signupRequest) {
-    User user = new User(signupRequest.getUsername(), signupRequest.getPassword());
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
+    User user = userFactory.getUser("NORMAL");
+    user.setUsername(signupRequest.getUsername());
+    user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
     user.setCreateDate(Instant.now());
     user.setEmail(signupRequest.getEmail());
-    Role userRole = roleRepository.findByName(RoleName.USER)
-        .orElseThrow(() -> new CommonException("User Role not set."));
-    user.setRoles(Collections.singleton(userRole));
     return userRepository.save(user);
   }
 
   public User createAdminUser(AdminCreateRequest adminCreateRequest) {
-    User user = new User(adminCreateRequest.getUsername(), adminCreateRequest.getPassword());
+    User user = userFactory.getUser("ADMIN");
+    user.setUsername(adminCreateRequest.getUsername());
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     user.setEmail(adminCreateRequest.getEmail());
     user.setCreateDate(Instant.now());
-    Role userRole = roleRepository.findByName(RoleName.USER)
-        .orElseThrow(() -> new CommonException("User Role not set."));
-    Role adminRole = roleRepository.findByName(RoleName.ADMIN)
-        .orElseThrow(() -> new CommonException("Admin Role not set."));
-    Set<Role> roleSet = new HashSet<>();
-    roleSet.add(userRole);
-    roleSet.add(adminRole);
-    user.setRoles(roleSet);
     return userRepository.save(user);
   }
 
