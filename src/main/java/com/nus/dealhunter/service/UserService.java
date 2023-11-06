@@ -68,6 +68,7 @@ public class UserService {
   public User createAdminUser(AdminCreateRequest adminCreateRequest) {
     User user = userFactory.getUser("ADMIN");
     user.setUsername(adminCreateRequest.getUsername());
+    user.setPassword(adminCreateRequest.getPassword());
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     user.setEmail(adminCreateRequest.getEmail());
     user.setCreateDate(Instant.now());
