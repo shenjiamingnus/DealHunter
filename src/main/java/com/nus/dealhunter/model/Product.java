@@ -174,6 +174,6 @@ public class Product {
     }
 
     public void setBrandName(String brandname) {
-        this.productname = brandname;
+        this.brandname = brandname;
     }
 }
