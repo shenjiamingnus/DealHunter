@@ -97,7 +97,6 @@ public class ProductService  {
         PriceHistory newPriceHistory = new PriceHistory(credatedProduct.getCurrentPrice(), Instant.now(), product);
 
         priceHistoryRepository.save(newPriceHistory);
-
         return credatedProduct;
     }
 
