@@ -34,35 +34,34 @@ public class BrandService {
         }catch (Exception e){
             throw new BrandServiceException("Failed to retrieve all brands ", e);
         }
-
     }
 
 
-public Brand createBrand(CreateBrandRequest createBrandRequest){
-    if (createBrandRequest == null) {
-        return null;
-    }
-    Brand brand = new Brand();
-    brand.setBrandname(createBrandRequest.getBrandname());
-    brand.setDescription(createBrandRequest.getDescription());
-    brand.setImageUrl(createBrandRequest.getImageUrl());
-    brand.setCreateDate(Instant.now());
-    return brandRepository.save(brand);
-}
-
-public  Brand modifyBrand(ModifyBrandRequest modifyBrandRequest){
-        Optional<Brand> optionalBrand = brandRepository.findById(modifyBrandRequest.getId());
-
-        if(optionalBrand.isPresent()){
-
-        Brand brand = optionalBrand.get();
-        brand.setBrandname(modifyBrandRequest.getBrandname());
-        brand.setDescription(modifyBrandRequest.getDescription());
-        brandRepository.save(brand);
+    public Brand createBrand(CreateBrandRequest createBrandRequest){
+        if (createBrandRequest == null) {
+            return null;
         }
-        return optionalBrand.orElse(null);
+        Brand brand = new Brand();
+        brand.setBrandname(createBrandRequest.getBrandname());
+        brand.setDescription(createBrandRequest.getDescription());
+        brand.setImageUrl(createBrandRequest.getImageUrl());
+        brand.setCreateDate(Instant.now());
+        return brandRepository.save(brand);
+    }
 
-}
+    public  Brand modifyBrand(ModifyBrandRequest modifyBrandRequest){
+            Optional<Brand> optionalBrand = brandRepository.findById(modifyBrandRequest.getId());
+
+            if(optionalBrand.isPresent()){
+
+            Brand brand = optionalBrand.get();
+            brand.setBrandname(modifyBrandRequest.getBrandname());
+            brand.setDescription(modifyBrandRequest.getDescription());
+            brandRepository.save(brand);
+            }
+            return optionalBrand.orElse(null);
+
+    }
 
 
 

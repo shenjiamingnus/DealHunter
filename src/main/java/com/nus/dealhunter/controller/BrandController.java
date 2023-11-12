@@ -20,10 +20,6 @@ public class BrandController {
     @Autowired
     private BrandService brandService;
 
-
-    @Autowired
-    JwtTokenUtil jwtTokenUtil;
-
     @GetMapping
     public List<Brand> getAllBrands() {
         return brandService.getAllBrands();
