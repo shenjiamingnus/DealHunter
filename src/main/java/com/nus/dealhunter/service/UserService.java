@@ -63,6 +63,7 @@ public class UserService {
     user.setCreateDate(Instant.now());
     user.setEmail(signupRequest.getEmail());
     return userRepository.save(user);
+
   }
 
   public User createAdminUser(AdminCreateRequest adminCreateRequest) {
