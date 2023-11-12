@@ -57,7 +57,6 @@ public class UserService {
   }
 
   public User createUser(SignupRequest signupRequest) {
-
     User user = userFactory.getUser("NORMAL");
     user.setUsername(signupRequest.getUsername());
     user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
