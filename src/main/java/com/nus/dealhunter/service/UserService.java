@@ -57,12 +57,14 @@ public class UserService {
   }
 
   public User createUser(SignupRequest signupRequest) {
+
     User user = userFactory.getUser("NORMAL");
     user.setUsername(signupRequest.getUsername());
     user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
     user.setCreateDate(Instant.now());
     user.setEmail(signupRequest.getEmail());
     return userRepository.save(user);
+
   }
 
   public User createAdminUser(AdminCreateRequest adminCreateRequest) {
