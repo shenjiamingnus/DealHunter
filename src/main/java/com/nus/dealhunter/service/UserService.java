@@ -73,6 +73,7 @@ public class UserService {
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     user.setEmail(adminCreateRequest.getEmail());
     user.setCreateDate(Instant.now());
+
     return userRepository.save(user);
   }
 
