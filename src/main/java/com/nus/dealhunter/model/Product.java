@@ -49,7 +49,6 @@ public class Product {
     @JsonInclude
     private Double lowestPrice;
 
-
     @CreatedDate
     private Instant createDate;
 

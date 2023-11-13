@@ -1,5 +1,6 @@
 package com.nus.dealhunter.service;
 
+import com.nus.dealhunter.builder.ProductBuilder;
 import com.nus.dealhunter.model.Brand;
 import com.nus.dealhunter.model.PriceHistory;
 import com.nus.dealhunter.model.Product;
@@ -78,15 +79,18 @@ public class ProductService  {
         if (createProductRequest == null) {
             return null;
         }
-        Product product = new Product();
-        product.setProductname(createProductRequest.getProductname());
-        product.setBrandName(createProductRequest.getBrandname());
-        product.setStoreAddress(createProductRequest.getStoreAddress());
-        product.setDescription(createProductRequest.getDescription());
-        product.setImageUrl(createProductRequest.getImageUrl());
-        product.setCurrentPrice(createProductRequest.getCurrentPrice());
-        product.setLowestPrice(createProductRequest.getCurrentPrice());
-        product.setCreateDate(Instant.now());
+        ProductBuilder productBuilder = new ProductBuilder();
+        productBuilder.createProduct();
+        productBuilder.buildStoreAddress(createProductRequest.getStoreAddress());
+        productBuilder.buildImageUrl(createProductRequest.getImageUrl());
+        productBuilder.buildProductName(createProductRequest.getProductname());
+        productBuilder.buildBrandName(createProductRequest.getBrandname());
+        productBuilder.buildCurrentPrice(createProductRequest.getCurrentPrice());
+        productBuilder.buildLowestPrice(createProductRequest.getCurrentPrice());
+        productBuilder.buildCreateDate();
+        productBuilder.buildDescription(createProductRequest.getDescription());
+
+        Product product = productBuilder.getProduct();
         //product.setBrand(new Brand(createProductRequest.getBrand_id(),createProductRequest.getBrandname()));
         if (createProductRequest.getBrand_id() != null && createProductRequest.getBrandname() != null) {
             product.setBrand(new Brand(createProductRequest.getBrand_id(), createProductRequest.getBrandname()));
