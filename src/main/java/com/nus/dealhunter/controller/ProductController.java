@@ -127,18 +127,6 @@ public class ProductController {
         return new ResponseEntity<>(isWatching, HttpStatus.OK);
     }
 
-//    @PostMapping("/{productId}/send-price-update-email")
-//    public ResponseEntity<String> sendLowestPriceUpdateEmail(@PathVariable Long productId, @RequestParam double newLowestPrice) {
-//        Product product = productService.getProductById(productId).orElse(null);
-//
-//        if (product != null) {
-//            productService.sendLowestPriceUpdateEmails(product, newLowestPrice);
-//            return new ResponseEntity<>("Price update emails sent successfully.", HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>("Product not found.", HttpStatus.NOT_FOUND);
-//        }
-//    }
-
 
 }
 
