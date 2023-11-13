@@ -17,7 +17,7 @@ public class RoleManager {
   private static RoleRepository roleRepository;
 
   @Autowired
-  public void setUserServer(RoleRepository roleRepository) {
+  public void setRoleRepository(RoleRepository roleRepository) {
     RoleManager.roleRepository = roleRepository;
   }
 
