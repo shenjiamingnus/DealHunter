@@ -1,6 +1,7 @@
 package com.nus.dealhunter.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.nus.dealhunter.strategy.NotificationEmailStrategy;
 import com.nus.dealhunter.util.EmailUtil;
 import lombok.Data;
 import lombok.Getter;
@@ -75,7 +76,8 @@ public class User implements Observer{
 
   @Override
   public boolean update(Product product, double newLowestPrice) {
-    EmailUtil.sendEmail(this, product, newLowestPrice);
+    NotificationEmailStrategy notificationEmailStrategy = new NotificationEmailStrategy();
+    notificationEmailStrategy.notify(this, product, newLowestPrice);
     return false;
   }
 
